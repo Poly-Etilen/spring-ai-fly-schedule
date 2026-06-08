@@ -1,0 +1,2 @@
+### 테스트용
+GET http://localhost:8080/api/flight/search?departure=광주&arrival=제주&date=2026-06-08
