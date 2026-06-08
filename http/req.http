@@ -1,2 +1,8 @@
 ### 테스트용
 GET http://localhost:8080/api/flight/search?departure=광주&arrival=제주&date=2026-06-08
+
+### ollama 응답테스트
+GET http://localhost:8080/api/chat/ollama?question=안녕하세요 반값습니다
+
+### gemini 응답테스트
+GET http://localhost:8080/api/chat/gemini?question=안녕하세요 반값습니다
