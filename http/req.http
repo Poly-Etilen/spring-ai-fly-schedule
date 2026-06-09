@@ -24,3 +24,12 @@ GET http://localhost:8080/api/agent/airport-code?input=광주
 
 ### Agent 테스트 (3)
 GET http://localhost:8080/api/agent/chain?departure=광주&arrival=제주&date=내일
+
+### MultiAgentOrchestrator 테스트 - 기본 검색
+GET http://localhost:8080/api/coordinator/search?departure=광주&arrival=제주&date=내일
+
+### MultiAgentOrchestrator 테스트 - 시간 조건 검색
+GET http://localhost:8080/api/coordinator/search/time?departure=광주&arrival=제주&date=내일&afterTime=14:00
+
+### MultiAgentOrchestrator 테스트 - 가격 조건 검색
+GET http://localhost:8080/api/coordinator/search/price?departure=광주&arrival=제주&date=내일&minPrice=30000&maxPrice=70000
