@@ -15,3 +15,12 @@ GET http://localhost:8080/api/chat/ollama?question=제주 공항 코드를 알�
 
 ### Tool 로깅 테스트 - 항공사 정보
 GET http://localhost:8080/api/chat/ollama?question=아시아나항공의 항공사 ID를 알려줘. 반드시 항공사 정보 도구를 사용해줘.
+
+### Agent 테스트 (1)
+GET http://localhost:8080/api/agent/date-parse?input=내일
+
+### Agent 테스트 (2)
+GET http://localhost:8080/api/agent/airport-code?input=광주
+
+### Agent 테스트 (3)
+GET http://localhost:8080/api/agent/chain?departure=광주&arrival=제주&date=내일
