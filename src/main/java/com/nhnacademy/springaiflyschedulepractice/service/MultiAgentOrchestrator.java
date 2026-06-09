@@ -2,7 +2,7 @@ package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.FlightSearchAgent;
 import com.nhnacademy.springaiflyschedulepractice.agent.PriceFilterAgent;
-import com.nhnacademy.springaiflyschedulepractice.agent.TimerFilterAgent;
+import com.nhnacademy.springaiflyschedulepractice.agent.TimeFilterAgent;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +24,7 @@ import java.util.Map;
 public class MultiAgentOrchestrator {
     private final FlightSearchAgent flightSearchAgent;
     private final PriceFilterAgent priceFilterAgent;
-    private final TimerFilterAgent timerFilterAgent;
+    private final TimeFilterAgent timeFilterAgent;
 
 
     public Map<String, List<FlightInfoResponse>> basicSearch(
@@ -78,11 +78,11 @@ public class MultiAgentOrchestrator {
         long startMs = System.currentTimeMillis();
 
         Map<String, List<FlightInfoResponse>> flights = flightSearchAgent.searchAndGroupByAirline(departure, arrival, date);
-        LocalTime parsedAfterTime = timerFilterAgent.parseTime(afterTime);
+        LocalTime parsedAfterTime = timeFilterAgent.parseTime(afterTime);
 
         Map<String, List<FlightInfoResponse>> result = new HashMap<>();
         for (Map.Entry<String, List<FlightInfoResponse>> entry : flights.entrySet()) {
-            List<FlightInfoResponse> filtered = timerFilterAgent.filterAfterTime(
+            List<FlightInfoResponse> filtered = timeFilterAgent.filterAfterTime(
                     entry.getValue(),
                     parsedAfterTime);
 
