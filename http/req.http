@@ -6,3 +6,12 @@ GET http://localhost:8080/api/chat/ollama?question=안녕하세요 반값습니�
 
 ### gemini 응답테스트
 GET http://localhost:8080/api/chat/gemini?question=안녕하세요 반값습니다
+
+### Tool 로깅 테스트 - 항공편 검색
+GET http://localhost:8080/api/chat/ollama?question=내일 광주에서 제주로 가는 항공편을 항공사별로 검색해줘. 반드시 항공편 검색 도구를 사용해줘.
+
+### Tool 로깅 테스트 - 공항 정보
+GET http://localhost:8080/api/chat/ollama?question=제주 공항 코드를 알려줘. 반드시 공항 정보 도구를 사용해줘.
+
+### Tool 로깅 테스트 - 항공사 정보
+GET http://localhost:8080/api/chat/ollama?question=아시아나항공의 항공사 ID를 알려줘. 반드시 항공사 정보 도구를 사용해줘.
