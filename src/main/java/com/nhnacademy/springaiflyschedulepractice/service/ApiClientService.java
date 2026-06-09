@@ -9,6 +9,7 @@ import com.nhnacademy.springaiflyschedulepractice.dto.airport.AirportInfoRespons
 import com.nhnacademy.springaiflyschedulepractice.dto.airport.AirportResponseWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -26,6 +27,7 @@ public class ApiClientService {
     private final RestClient restClient = RestClient.create();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    @Cacheable(value = "flights", key = "#depAirportId + '-' + #arrAirportId + '-' + #data")
     public List<FlightInfoResponse> getFlightSchedule(String depAirportId, String arrAirportId, String data) {
         try {
             String url = UriComponentsBuilder.fromUriString(apiProperties.getUrl() + "/GetFlightOpratInfoList")
@@ -61,6 +63,7 @@ public class ApiClientService {
         }
     }
 
+    @Cacheable("airports")
     public List<AirportInfoResponse> getAirportList() {
         try {
             String url = UriComponentsBuilder.fromUriString(apiProperties.getUrl() + "/GetArprtList")
@@ -88,6 +91,7 @@ public class ApiClientService {
         }
     }
 
+    @Cacheable("airlines")
     public List<AirlineInfoResponse> getAirlineList() {
         try {
             String url = UriComponentsBuilder.fromUriString(apiProperties.getUrl() + "/GetAirmanList")
