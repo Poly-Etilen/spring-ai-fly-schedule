@@ -24,3 +24,45 @@ GET http://localhost:8080/api/agent/airport-code?input=광주
 
 ### Agent 테스트 (3)
 GET http://localhost:8080/api/agent/chain?departure=광주&arrival=제주&date=내일
+
+### MultiAgentOrchestrator 테스트 - 기본 검색
+GET http://localhost:8080/api/coordinator/search?departure=광주&arrival=제주&date=내일
+
+### MultiAgentOrchestrator 테스트 - 시간 조건 검색
+GET http://localhost:8080/api/coordinator/search/time?departure=광주&arrival=제주&date=내일&afterTime=14:00
+
+### MultiAgentOrchestrator 테스트 - 가격 조건 검색
+GET http://localhost:8080/api/coordinator/search/price?departure=광주&arrival=제주&date=내일&minPrice=30000&maxPrice=70000
+
+### 자연어 검색 (1)
+POST http://localhost:8080/api/nl-search/search
+Content-Type: application/json
+
+{
+    "message": "내일 광주에서 제주로 가는 항공편 알려줘"
+}
+
+### 자연어 검색
+POST http://localhost:8080/api/nl-search/search
+Content-Type: application/json
+
+{
+    "message": "오후 2시 이후로 광주에서 제주로 가는 항공편 검색해줘"
+}
+
+
+### 자연어 검색
+POST http://localhost:8080/api/nl-search/search
+Content-Type: application/json
+
+{
+    "message": "5만원에서 7만원 사이의 광주-제주 항공편 알려줘"
+}
+
+### 자연어 검색
+POST http://localhost:8080/api/nl-search/search
+Content-Type: application/json
+
+{
+    "message": "내일 오후 2시 이후 6만원 이하인 광주-제주 항공편 추천해줘"
+}
