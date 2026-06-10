@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 항공편 통합 검색</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #f4f7f6;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            height: 85vh;
+        }
+        .header {
+            padding: 20px;
+            background: #007bff;
+            color: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .header h2 { margin: 0; font-size: 1.2rem; }
+        .header select {
+            padding: 5px;
+            border-radius: 5px;
+            border: none;
+            outline: none;
+        }
+        .chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .message {
+            max-width: 80%;
+            padding: 12px 16px;
+            border-radius: 8px;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+        .message.user {
+            background: #007bff;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        .message.bot {
+            background: #f1f0f0;
+            color: #333;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        .message pre {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-size: 0.85rem;
+        }
+        .input-area {
+            padding: 15px;
+            border-top: 1px solid #eee;
+            display: flex;
+            gap: 10px;
+        }
+        .input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            outline: none;
+        }
+        .input-area input:focus { border-color: #007bff; }
+        .input-area button {
+            padding: 12px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+        .input-area button:hover { background: #0056b3; }
+        .loading { font-size: 0.9rem; color: #666; font-style: italic; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <div class="header">
+        <h2>✈️ AI 항공 검색</h2>
+        <select id="apiType">
+            <option value="nl">최종 통합 검색 (A2A)</option>
+            <option value="ollama">Ollama 기본 챗</option>
+            <option value="gemini">Gemini 기본 챗</option>
+        </select>
+    </div>
+
+    <div class="chat-box" id="chatBox">
+        <div class="message bot">안녕하세요! 원하시는 출발지, 도착지, 날짜를 편하게 말씀해 주세요. <br>(예: 내일 광주에서 제주가는 비행기 찾아줘)</div>
+    </div>
+
+    <div class="input-area">
+        <input type="text" id="messageInput" placeholder="메시지를 입력하세요..." onkeypress="handleEnter(event)">
+        <button onclick="sendMessage()" id="sendBtn">전송</button>
+    </div>
+</div>
+
+<script>
+    const chatBox = document.getElementById('chatBox');
+    const messageInput = document.getElementById('messageInput');
+    const apiTypeSelect = document.getElementById('apiType');
+    const sendBtn = document.getElementById('sendBtn');
+
+    function handleEnter(e) {
+        if (e.key === 'Enter') sendMessage();
+    }
+
+    function appendMessage(sender, text, isHtml = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.className = `message ${sender}`;
+
+        if (isHtml) {
+            msgDiv.innerHTML = text;
+        } else {
+            msgDiv.textContent = text;
+        }
+
+        chatBox.appendChild(msgDiv);
+        chatBox.scrollTop = chatBox.scrollHeight;
+        return msgDiv;
+    }
+
+    async function sendMessage() {
+        const message = messageInput.value.trim();
+        if (!message) return;
+
+        // UI 업데이트
+        appendMessage('user', message);
+        messageInput.value = '';
+        messageInput.disabled = true;
+        sendBtn.disabled = true;
+
+        const loadingMsg = appendMessage('bot', 'AI가 답변을 생성 중입니다... ⏳');
+
+        const apiType = apiTypeSelect.value;
+        let response;
+
+        try {
+            if (apiType === 'nl') {
+                // A2A 통합 검색: POST 방식 + JSON 바디 (파라미터 키: "message")
+                response = await fetch('/api/nl-search/search', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: message })
+                });
+            } else if (apiType === 'ollama') {
+                // Ollama: GET 방식 + 쿼리 파라미터 (파라미터 키: "question")
+                response = await fetch(`/api/chat/ollama?question=${encodeURIComponent(message)}`);
+            } else if (apiType === 'gemini') {
+                // Gemini: GET 방식 + 쿼리 파라미터 (파라미터 키: "question")
+                response = await fetch(`/api/chat/gemini?question=${encodeURIComponent(message)}`);
+            }
+
+            loadingMsg.remove();
+
+            if (!response.ok) throw new Error(`서버 에러가 발생했습니다. (상태 코드: ${response.status})`);
+
+            if (apiType === 'nl') {
+                // A2A 결과는 JSON으로 오므로 파싱해서 보여줌
+                const data = await response.json();
+                let resultHtml = `<strong>[조율 완료]</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                appendMessage('bot', resultHtml, true);
+            } else {
+                // 일반 챗은 Text 반환
+                const text = await response.text();
+                appendMessage('bot', text);
+            }
+        } catch (error) {
+            loadingMsg.remove();
+            appendMessage('bot', `❌ 통신 실패: ${error.message}`);
+        } finally {
+            messageInput.disabled = false;
+            sendBtn.disabled = false;
+            messageInput.focus();
+        }
+    }
+</script>
+
+</body>
+</html>
