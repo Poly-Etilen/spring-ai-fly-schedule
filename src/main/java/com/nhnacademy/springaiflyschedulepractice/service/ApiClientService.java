@@ -27,13 +27,14 @@ public class ApiClientService {
     private final RestClient restClient = RestClient.create();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
-    @Cacheable(value = "flights", key = "#depAirportId + '-' + #arrAirportId + '-' + #data")
-    public List<FlightInfoResponse> getFlightSchedule(String depAirportId, String arrAirportId, String data) {
+    @Cacheable(value = "flights", key = "#depAirportId + '-' + #arrAirportId + '-' + #date")
+    public List<FlightInfoResponse> getFlightSchedule(String depAirportId, String arrAirportId, String date) {
         try {
             String url = UriComponentsBuilder.fromUriString(apiProperties.getUrl() + "/GetFlightOpratInfoList")
                     .queryParam("serviceKey", apiProperties.getServiceKey())
                     .queryParam("depAirportId", depAirportId)
                     .queryParam("arrAirportId", arrAirportId)
+                    .queryParam("depPlandTime", date)
                     .queryParam("_type", "json")
                     .build()
                     .encode(StandardCharsets.UTF_8)

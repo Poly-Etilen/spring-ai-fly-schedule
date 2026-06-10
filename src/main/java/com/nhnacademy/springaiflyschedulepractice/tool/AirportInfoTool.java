@@ -33,16 +33,6 @@ public class AirportInfoTool {
                     "지원하는 공항: 김포, 인천, 김해, 광주, 제주, 대구, 청주, 양양, 울산, 여수, 사천, 포항, 무안 등"
     )
     public String getAirportInfo(@ToolParam(description = "공항 이름 (예: 광주, 김포, 제주)") String airportName) {
-//        log.info("Tool 호출: getAirportCode({})", airportName);
-//        if (airportCodeCache == null) {
-//            getAirportList();
-//        }
-//
-//        String code = airportCodeCache.get(airportName);
-//        if (code == null) {
-//            return "알 수 없는 공항입니다.: " + airportName;
-//        }
-//        return code;
         return apiClientService.getAirportList()
                 .stream()
                 .filter(a -> a.getAirportName().equals(airportName))

@@ -17,21 +17,21 @@ public class AirportCodeAgent {
         AIRPORT_CODE_MAP.put("인천", "NAARKSI");
 
         // 부산/경남권
-        AIRPORT_CODE_MAP.put("김해", "NAARKJB");
+        AIRPORT_CODE_MAP.put("김해", "NAARKPK");
         AIRPORT_CODE_MAP.put("부산", "NAARKJB");
-        AIRPORT_CODE_MAP.put("울산", "NAARKNU");
+        AIRPORT_CODE_MAP.put("울산", "NAARKPU");
 
         // 호남권
         AIRPORT_CODE_MAP.put("광주", "NAARKJJ");
         AIRPORT_CODE_MAP.put("여수", "NAARKJY");
-        AIRPORT_CODE_MAP.put("무안", "NAARKJJ");
+        AIRPORT_CODE_MAP.put("무안", "NAARKJB");
 
         // 영남권
         AIRPORT_CODE_MAP.put("대구", "NAARKTN");
-        AIRPORT_CODE_MAP.put("포항", "NAARKPK");
+        AIRPORT_CODE_MAP.put("포항", "NAARKTH");
 
         // 충청/강원권
-        AIRPORT_CODE_MAP.put("청주", "NAARKNJ");
+        AIRPORT_CODE_MAP.put("청주", "NAARKTU");
         AIRPORT_CODE_MAP.put("양양", "NAARKNY");
 
         // 제주권

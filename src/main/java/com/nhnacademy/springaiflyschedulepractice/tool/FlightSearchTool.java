@@ -55,12 +55,12 @@ public class FlightSearchTool {
     private String getAirportCode(String airportName) {
         return switch (airportName) {
             case "김포" -> "NAARKSS";
-            case "인천" -> "NAARKII";
-            case "김해" -> "NAARKPN";
+            case "인천" -> "NAARKSI";
+            case "김해" -> "NAARKPK";
             case "광주" -> "NAARKJJ";
             case "제주" -> "NAARKPC";
             case "대구" -> "NAARKTN";
-            case "청주" -> "NAARKJJ";
+            case "청주" -> "NAARKTU";
             default -> "NAARKJJ";
         };
     }
