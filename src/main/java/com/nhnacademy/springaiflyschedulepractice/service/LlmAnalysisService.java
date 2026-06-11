@@ -1,6 +1,5 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import com.nhnacademy.springaiflyschedulepractice.logging.ChatLoggingAdvisor;
@@ -9,8 +8,6 @@ import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
-import java.util.Map;
 
 /**
  * 자연어로 요청했을 경우 LLM을 통해 요청 메시지에서 파라미터 추출

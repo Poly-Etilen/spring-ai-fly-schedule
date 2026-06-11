@@ -1,8 +1,8 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.springaiflyschedulepractice.config.DataGoKrApiProperties;
-import com.nhnacademy.springaiflyschedulepractice.dto.*;
+import com.nhnacademy.springaiflyschedulepractice.dto.ApiResponseWrapper;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineResponseWrapper;
 import com.nhnacademy.springaiflyschedulepractice.dto.airport.AirportInfoResponse;
