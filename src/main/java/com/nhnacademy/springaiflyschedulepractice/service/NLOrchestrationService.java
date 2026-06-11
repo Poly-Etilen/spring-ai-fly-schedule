@@ -1,8 +1,10 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.*;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
+import com.nhnacademy.springaiflyschedulepractice.dto.OrchestrationResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -48,7 +50,7 @@ public class NLOrchestrationService {
         }
 
         log.info("단계 3: 날짜 처리");
-        String dateStr = hasText(params.data()) ? params.data() : "내일";
+        String dateStr = hasText(params.date()) ? params.date() : "내일";
         String parsedDate = dateParserAgent.parseDate(dateStr);
         log.info("날짜: {} → {}", dateStr, parsedDate);
 
@@ -85,10 +87,8 @@ public class NLOrchestrationService {
 
         if (params.minPrice() != null || params.maxPrice() != null) {
             log.info("단계 7: 가격 필터링");
-            Integer minPrice = params.containsKey("minPrice") ?
-                    parsePriceParam(params.get("minPrice")) : null;
-            Integer maxPrice = params.containsKey("maxPrice") ?
-                    parsePriceParam(params.get("maxPrice")) : null;
+            Integer minPrice = params.minPrice();
+            Integer maxPrice = params.maxPrice();
             flights = priceFilterAgent.filterByPriceRange(flights, minPrice, maxPrice);
             log.info("가격 필터링: {}편", flights.size());
         }
@@ -98,7 +98,8 @@ public class NLOrchestrationService {
         Map<String, List<FlightInfoResponse>> groupedFlights = groupingAgent.groupByAirline(flights);
         log.info("그룹핑 완료");
 
-        Map<String, List<Map<String, Object>>> resultData = convertToResultMap(groupedFlights);
+        Map<String, List<FlightDetail>> resultData = groupedFlights.entrySet().stream()
+                        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(this::convertFlightToDetail).toList()));
 
 
         log.info("오케스트레이션 완료");
@@ -107,26 +108,13 @@ public class NLOrchestrationService {
         return OrchestrationResult.success(params, resultData);
     }
 
-
-    private Map<String, List<Map<String, Object>>> convertToResultMap(
-            Map<String, List<FlightInfoResponse>> groupedFlights) {
-
-        return groupedFlights.entrySet().stream()
-                .collect(Collectors.toMap(
-                        Map.Entry::getKey,
-                        entry -> entry.getValue().stream()
-                                .map(this::convertFlightToMap)
-                                .collect(Collectors.toList())
-                ));
-    }
-
-    private Map<String, Object> convertFlightToMap(FlightInfoResponse flight) {
-        return Map.of(
-                "vihicleId", flight.getFlightId(),
-                "airlineNm", flight.getAirlineName(),
-                "depTime", flight.getDepartureTime(),
-                "arrTime", flight.getArrivalTime(),
-                "economyCharge", flight.getEconomyCharge()
+    private FlightDetail convertFlightToDetail(FlightInfoResponse flight) {
+        return new FlightDetail(
+                flight.getFlightId(),
+                flight.getAirlineName(),
+                flight.getDepartureTime(),
+                flight.getArrivalTime(),
+                parseInteger(flight.getEconomyCharge())
         );
     }
 
@@ -134,33 +122,69 @@ public class NLOrchestrationService {
         return value instanceof String text && !text.isBlank() && !"null".equalsIgnoreCase(text);
     }
 
-    private Map<String, Object> normalizeParams(String message, Map<String, Object> params) {
-        Map<String, Object> normalized = new HashMap<>();
-        params.forEach((key, value) -> {
-            if (value != null && !"null".equalsIgnoreCase(value.toString()) && !value.toString().isBlank()) {
-                normalized.put(key, value);
+//    private Map<String, Object> normalizeParams(String message, Map<String, Object> params) {
+//        Map<String, Object> normalized = new HashMap<>();
+//        params.forEach((key, value) -> {
+//            if (value != null && !"null".equalsIgnoreCase(value.toString()) && !value.toString().isBlank()) {
+//                normalized.put(key, value);
+//            }
+//        });
+//
+//        fillRoute(message, normalized);
+//        fillDate(message, normalized);
+//        fillTime(message, normalized);
+//        fillPrice(message, normalized);
+//
+//        Object date = normalized.get("date");
+//
+//        if (date instanceof String dateText && !isDateExpression(dateText)) {
+//            if (!normalized.containsKey("afterTime") && dateText.contains("이후")) {
+//                normalized.put("afterTime", dateText);
+//            } else if (!normalized.containsKey("beforeTime")
+//                    && (dateText.contains("이전") || dateText.contains("전") || dateText.contains("까지"))) {
+//                normalized.put("beforeTime", dateText);
+//            }
+//            normalized.put("date", "내일");
+//        }
+//
+//        log.info("정규화된 파라미터: {}", normalized);
+//        return normalized;
+//    }
+    private FlightSearchParam normalizeParams(String message, FlightSearchParam params) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("departure", params.departure());
+        map.put("arrival", params.arrival());
+        map.put("date", params.date());
+        map.put("afterTime", params.afterTime());
+        map.put("beforeTime", params.beforeTime());
+        map.put("minPrice", params.minPrice());
+        map.put("maxPrice", params.maxPrice());
+
+        fillRoute(message, map);
+        fillDate(message, map);
+        fillTime(message, map);
+        fillPrice(message, map);
+
+        Object dateObj = map.get("date");
+        if (dateObj instanceof String dateText && !isDateExpression(dateText)) {
+            if (!map.containsKey("afterTime") && dateText.contains("이후")) {
+                map.put("afterTime", dateText);
+            } else if (!map.containsKey("beforeTime") && (dateText.contains("이전") || dateText.contains("전") || dateText.contains("까지"))) {
+                map.put("beforeTime", dateText);
             }
-        });
-
-        fillRoute(message, normalized);
-        fillDate(message, normalized);
-        fillTime(message, normalized);
-        fillPrice(message, normalized);
-
-        Object date = normalized.get("date");
-
-        if (date instanceof String dateText && !isDateExpression(dateText)) {
-            if (!normalized.containsKey("afterTime") && dateText.contains("이후")) {
-                normalized.put("afterTime", dateText);
-            } else if (!normalized.containsKey("beforeTime")
-                    && (dateText.contains("이전") || dateText.contains("전") || dateText.contains("까지"))) {
-                normalized.put("beforeTime", dateText);
-            }
-            normalized.put("date", "내일");
+            map.put("date", "내일");
         }
+        log.info("정규화된 파라미터 (Map 상태): {}", map);
 
-        log.info("정규화된 파라미터: {}", normalized);
-        return normalized;
+        return new FlightSearchParam(
+                (String) map.get("departure"),
+                (String) map.get("arrival"),
+                (String) map.get("date"),
+                (String) map.get("afterTime"),
+                (String) map.get("beforeTime"),
+                parseInteger(map.get("minPrice")),
+                parseInteger(map.get("maxPrice"))
+        );
     }
 
     private void fillRoute(String message, Map<String, Object> params) {
@@ -239,22 +263,33 @@ public class NLOrchestrationService {
                 || normalized.matches("\\d{4}-\\d{2}-\\d{2}");
     }
 
-    private Integer parsePriceParam(Object value) {
-        if (value == null) {
+//    private Integer parsePriceParam(Object value) {
+//        if (value == null) {
+//            return null;
+//        }
+//
+//        if (value instanceof Number number) {
+//            return number.intValue();
+//        }
+//
+//        String normalized = value.toString().replaceAll("[^0-9]", "");
+//        if (normalized.isBlank()) {
+//            return null;
+//        }
+//
+//        int price = Integer.parseInt(normalized);
+//        return price < 1000 ? price * 10000 : price;
+//    }
+
+    private Integer parseInteger(Object value) {
+        if (value == null) return null;
+        if (value instanceof Integer i) return i;
+        try {
+            String normalized = value.toString().replaceAll("[^0-9]", "");
+            return normalized.isBlank() ? null : Integer.parseInt(normalized);
+        } catch (Exception e) {
             return null;
         }
-
-        if (value instanceof Number number) {
-            return number.intValue();
-        }
-
-        String normalized = value.toString().replaceAll("[^0-9]", "");
-        if (normalized.isBlank()) {
-            return null;
-        }
-
-        int price = Integer.parseInt(normalized);
-        return price < 1000 ? price * 10000 : price;
     }
 
 }
