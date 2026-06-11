@@ -5,6 +5,7 @@ import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import com.nhnacademy.springaiflyschedulepractice.dto.OrchestrationResult;
+import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * 자연어 항공편 검색 오케스트레이션 서비스
@@ -98,8 +98,13 @@ public class NLOrchestrationService {
         Map<String, List<FlightInfoResponse>> groupedFlights = groupingAgent.groupByAirline(flights);
         log.info("그룹핑 완료");
 
-        Map<String, List<FlightDetail>> resultData = groupedFlights.entrySet().stream()
-                        .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().stream().map(this::convertFlightToDetail).toList()));
+        List<AirlineGroup> resultData = groupedFlights.entrySet().stream()
+                        .map(entry -> new AirlineGroup(
+                                entry.getKey(),
+                                entry.getValue().stream()
+                                        .map(this::convertFlightToDetail)
+                                        .toList()
+                        )).toList();
 
 
         log.info("오케스트레이션 완료");
