@@ -1,6 +1,5 @@
 package com.nhnacademy.springaiflyschedulepractice.logging;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClientRequest;
 import org.springframework.ai.chat.client.ChatClientResponse;
