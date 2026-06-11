@@ -59,6 +59,6 @@ public class ChatClientConfig {
     private List<ToolCallback> monitoringCallbacks(ToolCallback[] callbacks) {
         return Arrays.stream(callbacks)
                 .map(callback -> (ToolCallback) new ToolLoggingCallback(callback))
-                .collect(Collectors.toList());
+                .toList();
     }
 }
