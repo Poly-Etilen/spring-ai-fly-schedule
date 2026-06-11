@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AirlineInfoTool {
+public class AirlineInfoTool implements AiTool{
     private final ApiClientService apiClientService;
 
     @Tool(
@@ -22,7 +22,6 @@ public class AirlineInfoTool {
                     "국내 모든 항공사의 코드와 이름을 반환합니다."
     )
     public List<AirlineInfoResponse> getAirlineList() {
-        log.info("Tool 호출: getAirlineList()");
         return apiClientService.getAirlineList();
     }
 
@@ -32,7 +31,6 @@ public class AirlineInfoTool {
                     "지원하는 항공사: 대한항공, 아시아나항공, 제주항공, 에어부산, 에어서울, 진에어, 티웨이항공 등"
     )
     public String getAirlineId(@ToolParam(description = "항공사 이름 (예: 아시아나항공, 대한항공, 제주항공") String airlineName) {
-        log.info("Tool 호출: getAirlineId({})", airlineName);
         return apiClientService.getAirlineList()
                 .stream()
                 .filter(airline -> airline.getAirlineNm().equals(airlineName))
