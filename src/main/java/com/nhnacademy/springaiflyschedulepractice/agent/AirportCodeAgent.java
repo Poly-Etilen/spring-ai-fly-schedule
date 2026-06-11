@@ -39,14 +39,12 @@ public class AirportCodeAgent {
     }
 
     public String getAirportCode(String airportName) {
-        if (airportName == null || airportName.isBlank()) {
-            throw new IllegalArgumentException("공항 이름을 입력해주세요.");
-        }
 
+        validateAirport(airportName);
         String normalized = airportName.trim();
 
         if (normalized.matches("NAARK[A-Z]{2}")) {
-            log.info("공항 코드 입력됨: {}", normalized);
+            log.info("공항 코드 직접 입력됨: {}", normalized);
             return normalized;
         }
 
@@ -59,11 +57,15 @@ public class AirportCodeAgent {
         return code;
     }
 
-    public boolean isValidAirport(String airportName) {
+    public void validateAirport(String airportName) {
         if (airportName == null || airportName.isBlank()) {
-            return false;
+            throw new IllegalArgumentException("공항 이름을 입력해주세요.");
         }
-        return AIRPORT_CODE_MAP.containsKey(airportName.trim());
+        String normalized = airportName.trim();
+        if (!normalized.matches("NAARK[A-Z]{2}") && !AIRPORT_CODE_MAP.containsKey(normalized)) {
+            log.warn("알 수 없는 공항 요청: {}", airportName);
+            throw new IllegalArgumentException("지원하지 않거나 알 수 없는 공항: " + airportName);
+        }
     }
 
 }

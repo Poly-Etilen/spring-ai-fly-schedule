@@ -24,8 +24,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiClientService {
     private final DataGoKrApiProperties apiProperties;
-    private final RestClient restClient = RestClient.create();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestClient restClient;
 
     @Cacheable(value = "flights", key = "#depAirportId + '-' + #arrAirportId + '-' + #date")
     public List<FlightInfoResponse> getFlightSchedule(String depAirportId, String arrAirportId, String date) {
