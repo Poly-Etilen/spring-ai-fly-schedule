@@ -1,5 +1,7 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
+import com.nhnacademy.springaiflyschedulepractice.exception.ErrorCode;
+import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -43,7 +45,7 @@ public class DateParserAgent {
             return date.format(API_DATE_FORMATTER);
         } catch (DateTimeParseException e) {
             log.error("잘못된 날짜 형식: {}", dateInput);
-            throw new IllegalArgumentException("날짜 형식이 올바르지 않습니다. (YYYY-MM-DD 또는 '내일','모레' 등)");
+            throw new FlightSearchException(ErrorCode.INVALID_DATE_FORMAT);
         }
     }
 }

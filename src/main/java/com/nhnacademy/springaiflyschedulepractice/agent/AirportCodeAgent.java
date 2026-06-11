@@ -1,5 +1,7 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
+import com.nhnacademy.springaiflyschedulepractice.exception.ErrorCode;
+import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -59,12 +61,12 @@ public class AirportCodeAgent {
 
     public void validateAirport(String airportName) {
         if (airportName == null || airportName.isBlank()) {
-            throw new IllegalArgumentException("공항 이름을 입력해주세요.");
+            throw new FlightSearchException(ErrorCode.MISSING_AIRPORT_NAME);
         }
         String normalized = airportName.trim();
         if (!normalized.matches("NAARK[A-Z]{2}") && !AIRPORT_CODE_MAP.containsKey(normalized)) {
             log.warn("알 수 없는 공항 요청: {}", airportName);
-            throw new IllegalArgumentException("지원하지 않거나 알 수 없는 공항: " + airportName);
+            throw new FlightSearchException(ErrorCode.MISSING_AIRPORT_NAME, "알 수 없는 공항입니다.: " + airportName);
         }
     }
 
