@@ -2,7 +2,6 @@ package com.nhnacademy.springaiflyschedulepractice.controller;
 
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
-import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
 import com.nhnacademy.springaiflyschedulepractice.service.MultiAgentOrchestrator;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/coordinator")

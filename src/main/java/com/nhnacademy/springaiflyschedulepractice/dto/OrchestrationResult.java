@@ -3,7 +3,6 @@ package com.nhnacademy.springaiflyschedulepractice.dto;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
 
 import java.util.List;
-import java.util.Map;
 
 public record OrchestrationResult(
         boolean success,
