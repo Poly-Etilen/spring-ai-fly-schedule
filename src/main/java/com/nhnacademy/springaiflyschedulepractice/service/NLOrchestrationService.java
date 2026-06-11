@@ -2,6 +2,7 @@ package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.*;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -38,22 +39,22 @@ public class NLOrchestrationService {
         log.info("메시지: {}", message);
 
         log.info("단계 1: LLM 파라미터 추출");
-        Map<String, Object> params = llmAnalysisService.extractFlightSearchParam(message);
+        FlightSearchParam params = llmAnalysisService.extractFlightSearchParam(message);
         params = normalizeParams(message, params);
 
         log.info("단계 2: 파라미터 검증");
-        if (!hasText(params.get("departure")) || !hasText(params.get("arrival"))) {
+        if (!hasText(params.departure()) || !hasText(params.arrival())) {
             return OrchestrationResult.error("출발 공항과 도착 공항을 명확히 입력해주세요.");
         }
 
         log.info("단계 3: 날짜 처리");
-        String dateStr = (String) params.getOrDefault("date", "내일");
+        String dateStr = hasText(params.data()) ? params.data() : "내일";
         String parsedDate = dateParserAgent.parseDate(dateStr);
         log.info("날짜: {} → {}", dateStr, parsedDate);
 
         log.info("단계 4: 공항 코드 변환");
-        String departure = (String) params.get("departure");
-        String arrival = (String) params.get("arrival");
+        String departure = params.departure();
+        String arrival = params.arrival();
         String depCode = airportCodeAgent.getAirportCode(departure);
         String arrCode = airportCodeAgent.getAirportCode(arrival);
         log.info("공항: {} → {}, {} → {}", departure, depCode, arrival, arrCode);
@@ -63,26 +64,26 @@ public class NLOrchestrationService {
                 flightSearchAgent.searchAndGroupByAirline(depCode, arrCode, parsedDate);
         List<FlightInfoResponse> flights = flightsMap.values().stream()
                 .flatMap(List::stream)
-                .collect(Collectors.toList());
+                .toList();
         log.info("검색된 항공편: {}편", flights.size());
 
-        if (params.containsKey("afterTime")) {
+        if (hasText(params.afterTime())) {
             log.info("단계 6a: 시간 필터링 (이후)");
-            String afterTime = (String) params.get("afterTime");
+            String afterTime = params.afterTime();
             LocalTime time = timeFilterAgent.parseTime(afterTime);
             flights = timeFilterAgent.filterAfterTime(flights, time);
             log.info("{} 이후 필터링: {}편", afterTime, flights.size());
         }
 
-        if (params.containsKey("beforeTime")) {
+        if (hasText(params.beforeTime())) {
             log.info("단계 6b: 시간 필터링 (이전)");
-            String beforeTime = (String) params.get("beforeTime");
+            String beforeTime = params.beforeTime();
             LocalTime time = timeFilterAgent.parseTime(beforeTime);
             flights = timeFilterAgent.filterBeforeTime(flights, time);
             log.info("{} 이전 필터링: {}편", beforeTime, flights.size());
         }
 
-        if (params.containsKey("minPrice") || params.containsKey("maxPrice")) {
+        if (params.minPrice() != null || params.maxPrice() != null) {
             log.info("단계 7: 가격 필터링");
             Integer minPrice = params.containsKey("minPrice") ?
                     parsePriceParam(params.get("minPrice")) : null;

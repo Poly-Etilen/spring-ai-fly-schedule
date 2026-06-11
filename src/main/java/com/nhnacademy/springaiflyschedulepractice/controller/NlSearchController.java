@@ -4,19 +4,16 @@ package com.nhnacademy.springaiflyschedulepractice.controller;
 
 import com.nhnacademy.springaiflyschedulepractice.service.NLOrchestrationService;
 import com.nhnacademy.springaiflyschedulepractice.service.OrchestrationResult;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
 @RestController
 @RequestMapping("/api/nl-search")
+@RequiredArgsConstructor
 public class NlSearchController {
-
     private final NLOrchestrationService orchestrationService;
-
-    public NlSearchController(NLOrchestrationService orchestrationService) {
-        this.orchestrationService = orchestrationService;
-    }
 
     @PostMapping("/search")
     public Map<String, Object> search(@RequestBody Map<String, String> request) {

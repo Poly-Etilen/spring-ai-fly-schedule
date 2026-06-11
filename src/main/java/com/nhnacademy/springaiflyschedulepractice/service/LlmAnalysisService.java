@@ -2,6 +2,7 @@ package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import com.nhnacademy.springaiflyschedulepractice.logging.ChatLoggingAdvisor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
@@ -28,8 +29,7 @@ public class LlmAnalysisService {
                 .build();
     }
 
-    /** LLM에게 파라미터 추출을 요청하고 Jackson을 통해 Map 형태로 반환 */
-    public Map<String, Object> extractFlightSearchParam(String message) {
+    public FlightSearchParam extractFlightSearchParam(String message) {
         log.info("LLM 파라미터 추출 시작: {}", message);
 
         String systemMessage = """
@@ -67,11 +67,11 @@ public class LlmAnalysisService {
 
             return objectMapper.readValue(
                     extractJson(response),
-                    new TypeReference<Map<String, Object>>() {}
+                    FlightSearchParam.class
             );
         } catch (Exception e) {
             log.error("LLM 파라미터 추출 실패", e);
-            return Map.of();
+            return new FlightSearchParam(null,null,null,null,null,null,null);
         }
     }
 

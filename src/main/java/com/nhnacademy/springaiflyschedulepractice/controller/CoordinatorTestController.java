@@ -3,6 +3,7 @@ package com.nhnacademy.springaiflyschedulepractice.controller;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.service.MultiAgentOrchestrator;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,13 +11,9 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/coordinator")
+@RequiredArgsConstructor
 public class CoordinatorTestController {
-
     private final MultiAgentOrchestrator coordinator;
-
-    public CoordinatorTestController(MultiAgentOrchestrator coordinator) {
-        this.coordinator = coordinator;
-    }
 
     /**
      * 기본 검색 테스트
