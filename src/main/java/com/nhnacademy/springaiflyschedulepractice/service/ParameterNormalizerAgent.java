@@ -50,7 +50,7 @@ public class ParameterNormalizerAgent {
         );
     }
 
-    private boolean hasText(Object value) {
+    public boolean hasText(Object value) {
         return value instanceof String text && !text.isBlank() && !"null".equalsIgnoreCase(text);
     }
 

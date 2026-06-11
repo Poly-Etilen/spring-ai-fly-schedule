@@ -43,12 +43,12 @@ public class NLOrchestrationService {
         params = normalizerAgent.normalize(message, params);
 
         log.info("단계 2: 파라미터 검증");
-        if (!hasText(params.departure()) || !hasText(params.arrival())) {
+        if (!normalizerAgent.hasText(params.departure()) || !normalizerAgent.hasText(params.arrival())) {
             return OrchestrationResult.error("출발 공항과 도착 공항을 명확히 입력해주세요.");
         }
 
         log.info("단계 3: 날짜 처리");
-        String dateStr = hasText(params.date()) ? params.date() : "내일";
+        String dateStr = normalizerAgent.hasText(params.date()) ? params.date() : "내일";
         String parsedDate = dateParserAgent.parseDate(dateStr);
         log.info("날짜: {} → {}", dateStr, parsedDate);
 
@@ -67,7 +67,7 @@ public class NLOrchestrationService {
                 .toList();
         log.info("검색된 항공편: {}편", flights.size());
 
-        if (hasText(params.afterTime())) {
+        if (normalizerAgent.hasText(params.afterTime())) {
             log.info("단계 6a: 시간 필터링 (이후)");
             String afterTime = params.afterTime();
             LocalTime time = timeFilterAgent.parseTime(afterTime);
@@ -75,7 +75,7 @@ public class NLOrchestrationService {
             log.info("{} 이후 필터링: {}편", afterTime, flights.size());
         }
 
-        if (hasText(params.beforeTime())) {
+        if (normalizerAgent.hasText(params.beforeTime())) {
             log.info("단계 6b: 시간 필터링 (이전)");
             String beforeTime = params.beforeTime();
             LocalTime time = timeFilterAgent.parseTime(beforeTime);
@@ -119,10 +119,6 @@ public class NLOrchestrationService {
                 flight.getArrivalTime(),
                 normalizerAgent.parseInteger(flight.getEconomyCharge())
         );
-    }
-
-    private boolean hasText(Object value) {
-        return value instanceof String text && !text.isBlank() && !"null".equalsIgnoreCase(text);
     }
 
 }
