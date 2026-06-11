@@ -6,16 +6,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.stream.Collectors;
+
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class AirportInfoTool {
+public class AirportInfoTool implements AiTool{
     private final ApiClientService apiClientService;
 
     @Tool(
@@ -23,7 +22,6 @@ public class AirportInfoTool {
                     "국내 모든 공항의 코드와 이름을 반환합니다."
     )
     public List<AirportInfoResponse> getAirportList() {
-        log.info("Tool 호출: getAirportList()");
         return apiClientService.getAirportList();
     }
 

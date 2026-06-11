@@ -2,9 +2,7 @@ package com.nhnacademy.springaiflyschedulepractice.config;
 
 import com.nhnacademy.springaiflyschedulepractice.logging.ChatLoggingAdvisor;
 import com.nhnacademy.springaiflyschedulepractice.logging.ToolLoggingCallback;
-import com.nhnacademy.springaiflyschedulepractice.tool.AirlineInfoTool;
-import com.nhnacademy.springaiflyschedulepractice.tool.AirportInfoTool;
-import com.nhnacademy.springaiflyschedulepractice.tool.FlightSearchTool;
+import com.nhnacademy.springaiflyschedulepractice.tool.AiTool;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
@@ -29,13 +27,11 @@ public class ChatClientConfig {
     @Primary
     public ChatClient.Builder ollamaChatClientBuilder(
             @Qualifier("ollamaChatModel") ChatModel ollamaChatModel,
-            FlightSearchTool flightSearchTool,
-            AirlineInfoTool airlineInfoTool,
-            AirportInfoTool airportInfoTool) {
+            List<AiTool> tools) {
 
 
         List<ToolCallback> toolCallbacks = monitoringCallbacks(
-                ToolCallbacks.from(flightSearchTool, airportInfoTool, airlineInfoTool));
+                ToolCallbacks.from(tools.toArray()));
 
         return ChatClient.builder(ollamaChatModel)
                 .defaultToolCallbacks(toolCallbacks)
@@ -45,11 +41,9 @@ public class ChatClientConfig {
     @Bean
     public ChatClient.Builder geminiChatClientBuilder(
             @Qualifier("googleGenAiChatModel") ChatModel geminiChatModel,
-            FlightSearchTool flightSearchTool,
-            AirlineInfoTool airlineInfoTool,
-            AirportInfoTool airportInfoTool) {
+            List<AiTool> tools) {
         List<ToolCallback> toolCallbacks = monitoringCallbacks(
-                ToolCallbacks.from(flightSearchTool, airportInfoTool, airlineInfoTool));
+                ToolCallbacks.from(tools.toArray()));
 
         return ChatClient.builder(geminiChatModel)
                 .defaultToolCallbacks(toolCallbacks)

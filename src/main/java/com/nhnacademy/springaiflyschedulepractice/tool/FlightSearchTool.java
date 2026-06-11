@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -19,7 +18,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class FlightSearchTool {
+public class FlightSearchTool implements AiTool{
     private final ApiClientService apiClientService;
 
     @Tool(
@@ -32,7 +31,6 @@ public class FlightSearchTool {
             @ToolParam(description = "출발 공항 이름 (예: 광주, 김포, 제주)") String departure,
             @ToolParam(description = "도착 공항 이름 (예: 제주, 광주, 김포)") String arrival,
             @ToolParam(description = "날짜 (예: 내일, 모레, 2026-06-08)") String date) {
-        log.info("Tool 호출: searchFlightsByAirline(departure = {}, arrival = {}, date = {})", departure, arrival, date);
         String formattedDate = parseDate(date);
         String depAirportId = getAirportCode(departure);
         String arrAirportId = getAirportCode(arrival);
@@ -48,7 +46,7 @@ public class FlightSearchTool {
             }
         });
 
-        log.info("Tool 응답: {}개 항공사, {}편", limitedFlight.size(), limitedFlight.values().stream().mapToInt(List::size).sum());
+//        log.info("Tool 응답: {}개 항공사, {}편", limitedFlight.size(), limitedFlight.values().stream().mapToInt(List::size).sum());
         return limitedFlight;
     }
 
