@@ -1,7 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.dto.airline;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import lombok.Data;
 
 import java.util.List;

@@ -53,12 +53,17 @@ public class FlightSearchTool implements AiTool{
     private String getAirportCode(String airportName) {
         return switch (airportName) {
             case "김포" -> "NAARKSS";
-            case "인천" -> "NAARKII";
-            case "김해" -> "NAARKPN";
+            case "인천" -> "NAARKSI";
+            case "김해" -> "NAARKPK";
+            case "울산" -> "NAARKPU";
+            case "무안" -> "NAARKJB";
             case "광주" -> "NAARKJJ";
+            case "여수" -> "NAARKJY";
             case "제주" -> "NAARKPC";
             case "대구" -> "NAARKTN";
-            case "청주" -> "NAARKJJ";
+            case "포항" -> "NAARKTH";
+            case "양양" -> "NAARKNY";
+            case "청주" -> "NAARKTU";
             default -> "NAARKJJ";
         };
     }

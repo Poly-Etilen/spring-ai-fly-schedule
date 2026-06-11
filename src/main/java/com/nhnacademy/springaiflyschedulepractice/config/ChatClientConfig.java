@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Primary;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Configuration
 @RequiredArgsConstructor
@@ -53,6 +52,6 @@ public class ChatClientConfig {
     private List<ToolCallback> monitoringCallbacks(ToolCallback[] callbacks) {
         return Arrays.stream(callbacks)
                 .map(callback -> (ToolCallback) new ToolLoggingCallback(callback))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

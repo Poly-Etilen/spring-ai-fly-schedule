@@ -1,6 +1,8 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
+import com.nhnacademy.springaiflyschedulepractice.exception.ErrorCode;
+import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +19,7 @@ public class TimeFilterAgent {
 
     public LocalTime parseTime(String timeInput){
         if(timeInput == null || timeInput.isBlank()){
-            throw new IllegalArgumentException("시간을 입력해주세요");
+            throw new FlightSearchException(ErrorCode.MISSING_TIME_INPUT);
         }
 
         String normalized = timeInput.trim().toLowerCase();
@@ -58,7 +60,7 @@ public class TimeFilterAgent {
             String cleaned = normalized.replaceAll("[^0-9]", "");
             return parseNumericTime(cleaned);
         } catch (RuntimeException e) {
-            throw new IllegalArgumentException("시간 형식이 올바르지 않습니다. 입력값: " + timeInput);
+            throw new FlightSearchException(ErrorCode.INVALID_TIME_FORMAT, "시간 형식이 올바르지 않습니다. 입력값: " + timeInput);
         }
     }
 
@@ -109,12 +111,12 @@ public class TimeFilterAgent {
                         return false;
                     }
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private LocalTime parseDepartureTime(String departureTime) {
         if (departureTime == null || departureTime.length() < 8) {
-            throw new IllegalArgumentException("잘못된 출발 시간 형식");
+            throw new FlightSearchException(ErrorCode.INVALID_TIME_FORMAT, "잘못된 출발 시간 형식: " + departureTime);
         }
 
 

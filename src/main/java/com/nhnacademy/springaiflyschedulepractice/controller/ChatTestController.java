@@ -36,7 +36,7 @@ public class ChatTestController {
 
         String duration = (endTime - startTime) / 1000.0  + "초";
 
-        return "[Gmini 응답 (" + duration + ")]\n" + response;
+        return "[Gemini 응답 (" + duration + ")]\n" + response;
     }
 
 }

@@ -1,8 +1,8 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nhnacademy.springaiflyschedulepractice.config.DataGoKrApiProperties;
-import com.nhnacademy.springaiflyschedulepractice.dto.*;
+import com.nhnacademy.springaiflyschedulepractice.dto.ApiResponseWrapper;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineResponseWrapper;
 import com.nhnacademy.springaiflyschedulepractice.dto.airport.AirportInfoResponse;
@@ -24,16 +24,16 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ApiClientService {
     private final DataGoKrApiProperties apiProperties;
-    private final RestClient restClient = RestClient.create();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestClient restClient;
 
-    @Cacheable(value = "flights", key = "#depAirportId + '-' + #arrAirportId + '-' + #data")
-    public List<FlightInfoResponse> getFlightSchedule(String depAirportId, String arrAirportId, String data) {
+    @Cacheable(value = "flights", key = "#depAirportId + '-' + #arrAirportId + '-' + #date")
+    public List<FlightInfoResponse> getFlightSchedule(String depAirportId, String arrAirportId, String date) {
         try {
             String url = UriComponentsBuilder.fromUriString(apiProperties.getUrl() + "/GetFlightOpratInfoList")
                     .queryParam("serviceKey", apiProperties.getServiceKey())
                     .queryParam("depAirportId", depAirportId)
                     .queryParam("arrAirportId", arrAirportId)
+                    .queryParam("depPlandTime", date)
                     .queryParam("_type", "json")
                     .build()
                     .encode(StandardCharsets.UTF_8)

@@ -1,22 +1,22 @@
 package com.nhnacademy.springaiflyschedulepractice.controller;
 
 
-import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
+import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
 import com.nhnacademy.springaiflyschedulepractice.service.MultiAgentOrchestrator;
-import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/coordinator")
+@RequiredArgsConstructor
 public class CoordinatorTestController {
-
     private final MultiAgentOrchestrator coordinator;
-
-    public CoordinatorTestController(MultiAgentOrchestrator coordinator) {
-        this.coordinator = coordinator;
-    }
 
     /**
      * 기본 검색 테스트
@@ -28,7 +28,7 @@ public class CoordinatorTestController {
             @RequestParam String arrival,
             @RequestParam String date) {
 
-        Map<String, List<FlightInfoResponse>> result = coordinator.basicSearch(departure, arrival, date);
+        List<AirlineGroup> result = coordinator.basicSearch(departure, arrival, date);
 
 //        StringBuilder sb = new StringBuilder();
 //        sb.append("조율된 검색 결과:\n\n");
@@ -44,9 +44,7 @@ public class CoordinatorTestController {
 //            sb.append("\n");
 //        });
 
-        return "총 " + result.values().stream()
-                .mapToInt(List::size)
-                .sum() + "편의 항공편이 있습니다.";
+        return formatResult("조율된 검색 결과", result);
     }
 
     /**
@@ -60,12 +58,9 @@ public class CoordinatorTestController {
             @RequestParam String date,
             @RequestParam String afterTime) {
 
-        Map<String, List<FlightInfoResponse>> result = coordinator.timeFilterSearch(departure, arrival, date, afterTime);
+        List<AirlineGroup> result = coordinator.timeFilterSearch(departure, arrival, date, afterTime);
 
-        return "시간 필터 결과 (" + afterTime + " 이후):\n\n" +
-                result.values().stream()
-                        .mapToInt(List::size)
-                        .sum() + "편의 항공편이 있습니다.";
+        return formatResult("시간 필터 결과 (" + afterTime + " 이후)", result);
     }
 
     /**
@@ -80,11 +75,33 @@ public class CoordinatorTestController {
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice) {
 
-        Map<String, List<FlightInfoResponse>> result = coordinator.priceFilterSearch(departure, arrival, date, minPrice, maxPrice);
+        List<AirlineGroup> result = coordinator.priceFilterSearch(departure, arrival, date, minPrice, maxPrice);
 
-        return "가격 필터 결과 (" + minPrice + "~" + maxPrice + "원):\n\n" +
-                result.values().stream()
-                        .mapToInt(List::size)
-                        .sum() + "편의 항공편이 있습니다.";
+        return formatResult("가격 필터 결과 (" + minPrice + "~" + maxPrice + "원)", result);
+    }
+
+    private String formatResult(String title, List<AirlineGroup> result) {
+        StringBuilder sb = new StringBuilder();
+        sb.append(title).append(":\n\n");
+
+        int totalFlights = 0;
+
+        for (AirlineGroup group : result) {
+            List<FlightDetail> flights = group.flights();
+            totalFlights += flights.size();
+
+            sb.append("[").append(group.airlineName()).append("] - ").append(flights.size()).append("편\n");
+
+            for (FlightDetail f : flights) {
+                sb.append("  ").append(f.flightId())
+                        .append(" (").append(f.departureTime())
+                        .append(" → ").append(f.arrivalTime())
+                        .append(") ").append(f.price() != null ? f.price() : "가격 미상").append("원\n");
+            }
+            sb.append("\n");
+        }
+
+        sb.append("총 ").append(totalFlights).append("편의 항공편이 있습니다.");
+        return sb.toString();
     }
 }
