@@ -25,6 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class MultiAgentOrchestrator {
+    private final ParameterNormalizerAgent normalizer;
     private final FlightSearchAgent flightSearchAgent;
     private final PriceFilterAgent priceFilterAgent;
     private final TimeFilterAgent timeFilterAgent;
@@ -104,18 +105,8 @@ public class MultiAgentOrchestrator {
                         f.getAirlineName(),
                         f.getDepartureTime(),
                         f.getArrivalTime(),
-                        parseInteger(f.getEconomyCharge())
+                        normalizer.parseInteger(f.getEconomyCharge())
                 )).toList();
-    }
-
-    private Integer parseInteger(Object value) {
-        if (value == null) return null;
-        if (value instanceof Integer i) return i;
-        try {
-            return Integer.parseInt(value.toString().replaceAll("[^0-9]", ""));
-        } catch (Exception e) {
-            return null;
-        }
     }
 
 }
