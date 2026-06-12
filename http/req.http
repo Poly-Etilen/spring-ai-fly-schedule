@@ -70,3 +70,7 @@ Content-Type: application/json
 
 ### No LLM
 GET http://localhost:8080/api/no-llm/flights?departureAirport=광주&arrivalAirport=제주&date=2026-06-13&minPrice=40000
+
+
+### test
+GET http://localhost:8080/api/coordinator/search/price?departureAirport=광주&arrivalAirport=제주&date=내일&minPrice=30000&maxPrice=70000

@@ -4,7 +4,10 @@ import com.nhnacademy.springaiflyschedulepractice.mvc.dto.flight.FlightSearchReq
 import com.nhnacademy.springaiflyschedulepractice.mvc.dto.flight.FlightSearchResponse;
 import com.nhnacademy.springaiflyschedulepractice.mvc.service.FlightService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
