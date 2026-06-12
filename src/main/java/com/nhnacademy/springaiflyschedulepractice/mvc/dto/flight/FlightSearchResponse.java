@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FlightSearchResponse {
     private String flightId;
+    private String airlineName;
     private String departureTime;
     private String arrivalTime;
     private String price;
