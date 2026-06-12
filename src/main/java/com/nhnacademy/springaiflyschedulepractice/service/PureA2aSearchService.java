@@ -1,11 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.FlightSearchAgent;
-import com.nhnacademy.springaiflyschedulepractice.agent.GroupingAgent;
-import com.nhnacademy.springaiflyschedulepractice.agent.PriceFilterAgent;
-import com.nhnacademy.springaiflyschedulepractice.agent.TimeFilterAgent;
-import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
-import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import com.nhnacademy.springaiflyschedulepractice.dto.OrchestrationResult;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
@@ -14,7 +9,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
