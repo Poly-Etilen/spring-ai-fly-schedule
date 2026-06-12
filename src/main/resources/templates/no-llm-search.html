@@ -21,11 +21,41 @@
             border-radius: 12px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        h2 {
-            margin-top: 0;
-            color: #333;
+        .header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             border-bottom: 2px solid #38cb90;
-            padding-bottom: 10px;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .header-section h2 {
+            margin: 0;
+            border: none;
+            padding: 0;
+            color: #333;
+        }
+        .mode-switch-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 10px 18px;
+            background-color: #f8f9fa;
+            color: #495057;
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            border: 1px solid #ced4da;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .mode-switch-btn:hover {
+            background-color: #007bff; /* 이동할 페이지의 파란색(AI) 테마 */
+            color: white;
+            border-color: #007bff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 123, 255, 0.3);
         }
         .search-form {
             display: grid;
@@ -167,8 +197,10 @@
 <body>
 
 <div class="container">
-    <h2>일반 항공편 직접 검색</h2>
-    <h3><a href="http://localhost:8080/">자연어 검색 페이지 이동</a></h3>
+    <div class="header-section">
+        <h2>일반 항공편 직접 검색</h2>
+        <a href="/" class="mode-switch-btn">AI 자연어 검색으로 전환 </a>
+    </div>
 
     <form id="searchForm" class="search-form" onsubmit="performSearch(event)">
         <div class="form-group">
