@@ -1,7 +1,11 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
+import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
+import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
 import com.nhnacademy.springaiflyschedulepractice.service.ApiClientService;
+import com.nhnacademy.springaiflyschedulepractice.service.ParameterNormalizerAgent;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -16,7 +20,10 @@ public class FlightSearchAgent {
     private final ApiClientService apiClientService;
     private final DateParserAgent dateParserAgent;
     private final AirportCodeAgent airportCodeAgent;
+    private final TimeFilterAgent timeFilterAgent;
+    private final PriceFilterAgent priceFilterAgent;
     private final GroupingAgent groupingAgent;
+    private final ParameterNormalizerAgent parameterNormalizerAgent;
 
     public Map<String, List<FlightInfoResponse>> searchAndGroupByAirline(String departure, String arrival, String date) {
         log.info("FlightSearchAgent: 항공편 검색 시작");
@@ -45,5 +52,35 @@ public class FlightSearchAgent {
 
         log.info("FlightSearchAgent: 항공편 검색 완료 ({}개 항공사)", grouped.size());
         return grouped;
+    }
+
+    public List<AirlineGroup> processFullSearchPipeline(FlightSearchParam params) {
+        String dateStr = parameterNormalizerAgent.hasText(params.date()) ? params.date() : "내일";
+        String parsedDate = dateParserAgent.parseDate(dateStr);
+        String depCode = airportCodeAgent.getAirportCode(params.departure());
+        String arrCode = airportCodeAgent.getAirportCode(params.arrival());
+
+        List<FlightInfoResponse> flights = apiClientService.getFlightSchedule(depCode,arrCode, parsedDate);
+
+        if (parameterNormalizerAgent.hasText(params.afterTime())) {
+            flights = timeFilterAgent.filterAfterTime(flights, timeFilterAgent.parseTime(params.afterTime()));
+        }
+        if (params.minPrice() != null && params.maxPrice() != null) {
+            flights = priceFilterAgent.filterByPriceRange(flights, params.minPrice(), params.maxPrice());
+        }
+        Map<String, List<FlightInfoResponse>> grouped = groupingAgent.groupByAirline(flights);
+
+        return grouped.entrySet().stream()
+                .map(entry -> new AirlineGroup(
+                        entry.getKey(),
+                        entry.getValue().stream()
+                                .map(f -> new FlightDetail(
+                                        f.getFlightId(),
+                                        f.getAirlineName(),
+                                        f.getDepartureTime(),
+                                        f.getArrivalTime(),
+                                        parameterNormalizerAgent.parseInteger(f.getEconomyCharge()))
+                                ).toList()
+                )).toList();
     }
 }
