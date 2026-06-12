@@ -34,12 +34,12 @@ public class NLOrchestrationService {
     private final GroupingAgent groupingAgent;
 
 
-    public OrchestrationResult orchestrateFlightSearch(String message) {
+    public OrchestrationResult orchestrateFlightSearch(String message, String model) {
         log.info("자연어 항공편 검색 오케스트레이션 시작");
         log.info("메시지: {}", message);
 
         log.info("단계 1: LLM 파라미터 추출");
-        FlightSearchParam params = llmAnalysisService.extractFlightSearchParam(message);
+        FlightSearchParam params = llmAnalysisService.extractFlightSearchParam(message, model);
         params = normalizerAgent.normalize(message, params);
 
         log.info("단계 2: 파라미터 검증");

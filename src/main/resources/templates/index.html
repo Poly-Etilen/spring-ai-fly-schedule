@@ -141,9 +141,20 @@
     <div class="header">
         <h2>AI 항공 검색</h2>
         <select id="apiType">
-            <option value="nl">최종 통합 검색 (A2A)</option>
-            <option value="ollama">Ollama 기본 챗</option>
-            <option value="gemini">Gemini 기본 챗</option>
+            <optgroup label="1. 중앙 통제 (Orchestrator) 방식">
+                <option value="orch-ollama">Orchestrator (Ollama)</option>
+                <option value="orch-gemini">Orchestrator (Gemini)</option>
+            </optgroup>
+
+            <optgroup label="2. 에이전트 협업 (순수 A2A) 방식">
+                <option value="a2a-ollama">Pure A2A (Ollama)</option>
+                <option value="a2a-gemini">Pure A2A (Gemini)</option>
+            </optgroup>
+
+            <optgroup label="3. 자율 도구 호출 (LLM Tool) 방식">
+                <option value="tool-ollama">Tool Call (Ollama)</option>
+                <option value="tool-gemini">Tool Call (Gemini)</option>
+            </optgroup>
         </select>
     </div>
 
@@ -198,32 +209,34 @@
         let response;
 
         try {
-            if (apiType === 'nl') {
-                // A2A 통합 검색: POST 방식 + JSON 바디 (파라미터 키: "message")
+            const [archType, modelType] = apiType.split('-');
+
+            if (archType === 'orch' || archType === 'a2a') {
                 response = await fetch('/api/nl-search/search', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ message: message })
+                    body: JSON.stringify({
+                        message: message,
+                        model: modelType,
+                        type: archType
+                    })
                 });
-            } else if (apiType === 'ollama') {
-                // Ollama: GET 방식 + 쿼리 파라미터 (파라미터 키: "question")
-                response = await fetch(`/api/chat/ollama?question=${encodeURIComponent(message)}`);
-            } else if (apiType === 'gemini') {
-                // Gemini: GET 방식 + 쿼리 파라미터 (파라미터 키: "question")
-                response = await fetch(`/api/chat/gemini?question=${encodeURIComponent(message)}`);
+            }
+
+            else if (archType === 'tool') {
+                response = await fetch(`/api/chat/${modelType}?question=${encodeURIComponent(message)}`);
             }
 
             loadingMsg.remove();
 
             if (!response.ok) throw new Error(`서버 에러가 발생했습니다. (상태 코드: ${response.status})`);
 
-            if (apiType === 'nl') {
-                // A2A 결과는 JSON으로 오므로 파싱해서 보여줌
+            if (archType === 'orch' || archType === 'a2a') {
                 const data = await response.json();
-                let resultHtml = `<strong>[조율 완료]</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                const title = archType === 'orch' ? '[Orchestrator 중앙 조율 완료]' : '[A2A 에이전트 협업 완료]';
+                let resultHtml = `<strong>${title}</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
                 appendMessage('bot', resultHtml, true);
             } else {
-                // 일반 챗은 Text 반환
                 const text = await response.text();
                 appendMessage('bot', text);
             }

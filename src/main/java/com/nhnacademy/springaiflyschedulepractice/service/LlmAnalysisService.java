@@ -15,19 +15,26 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @Service
 public class LlmAnalysisService {
-    private final ChatClient chatClient;
+    private final ChatClient ollamaClient;
+    private final ChatClient geminiClient;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
     public LlmAnalysisService(
-            @Qualifier("ollamaChatModel") ChatModel chatModel,
+            @Qualifier("ollamaChatModel") ChatModel ollamaModel,
+            @Qualifier("googleGenAiChatModel") ChatModel geminiChatModel,
             ChatLoggingAdvisor chatLoggingAdvisor) {
-        this.chatClient = ChatClient.builder(chatModel)
+        this.ollamaClient = ChatClient.builder(ollamaModel)
+                .defaultAdvisors(chatLoggingAdvisor)
+                .build();
+        this.geminiClient = ChatClient.builder(geminiChatModel)
                 .defaultAdvisors(chatLoggingAdvisor)
                 .build();
     }
 
-    public FlightSearchParam extractFlightSearchParam(String message) {
+    public FlightSearchParam extractFlightSearchParam(String message, String model) {
         log.info("LLM 파라미터 추출 시작: {}", message);
+
+        ChatClient activeClient = model.equalsIgnoreCase("gemini") ? geminiClient : ollamaClient;
 
         String systemMessage = """
                 너는 항공편 검색 파라미터 추출 전문가야.
@@ -54,7 +61,7 @@ public class LlmAnalysisService {
                 """, message);
 
         try {
-            String response = chatClient.prompt()
+            String response = activeClient.prompt()
                     .system(systemMessage)
                     .user(userPrompt)
                     .call()
