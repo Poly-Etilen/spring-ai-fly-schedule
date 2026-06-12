@@ -66,3 +66,7 @@ Content-Type: application/json
 {
     "message": "내일 오후 2시 이후 6만원 이하인 광주-제주 항공편 추천해줘"
 }
+
+
+### No LLM
+GET http://localhost:8080/api/no-llm/flights?departureAirport=광주&arrivalAirport=제주&date=2026-06-13&minPrice=40000
