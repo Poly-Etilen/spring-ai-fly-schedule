@@ -34,7 +34,7 @@ public class DateParserAgent {
             case "오늘" -> LocalDate.now().format(API_DATE_FORMATTER);
             case "내일" -> LocalDate.now().plusDays(1).format(API_DATE_FORMATTER);
             case "모레", "내일모레" -> LocalDate.now().plusDays(2).format(API_DATE_FORMATTER);
-            case "글피" -> LocalDate.now().plusYears(3).format(API_DATE_FORMATTER);
+            case "글피" -> LocalDate.now().plusDays(3).format(API_DATE_FORMATTER);
             default -> parseSpecificDate(dateInput);
         };
     }

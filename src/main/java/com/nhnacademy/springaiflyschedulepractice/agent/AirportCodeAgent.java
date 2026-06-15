@@ -53,7 +53,7 @@ public class AirportCodeAgent {
         String code = AIRPORT_CODE_MAP.get(normalized);
         if (code == null) {
             log.warn("알 수 없는 공항: {}", airportName);
-            throw new IllegalArgumentException("알 수 없는 공항입니다: " + airportName);
+            throw new FlightSearchException(ErrorCode.INVALID_AIRPORT_NAME, "알 수 없는 공항입니다: " + airportName);
         }
         log.info("공항 코드 변환: {} -> {}", airportName, code);
         return code;
