@@ -13,13 +13,13 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class PureA2aSearchService {
+public class CoordinatorSearchService {
     private final LlmAnalysisService llmAnalysisService;
     private final ParameterNormalizerAgent parameterNormalizerAgent;
-    private final FlightSearchAgent flightSearchAgent;
+    private final FlightCoordinator flightCoordinator;
 
-    public OrchestrationResult executeA2aSearch(String message, String model) {
-        log.info("순수 A2A 방식 검색 시작");
+    public OrchestrationResult executeCoordinatorSearch(String message, String model) {
+        log.info("Coordinator 방식 검색 시작");
         FlightSearchParam params = llmAnalysisService.extractFlightSearchParam(message, model);
         params = parameterNormalizerAgent.normalize(message, params);
 
@@ -27,9 +27,9 @@ public class PureA2aSearchService {
             return OrchestrationResult.error("출발 공항과 도착 공항을 명확히 입력해주세요.");
         }
 
-        List<AirlineGroup> resultData = flightSearchAgent.processFullSearchPipeline(params);
+        List<AirlineGroup> resultData = flightCoordinator.executeSearchWorkflow(params);
 
-        log.info("순수 A2A 방식 완료");
+        log.info("Coordinator 방식 완료");
         return OrchestrationResult.success(params, resultData);
     }
 }

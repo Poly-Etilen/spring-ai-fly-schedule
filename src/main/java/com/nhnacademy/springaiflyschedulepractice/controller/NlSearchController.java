@@ -3,7 +3,7 @@ package com.nhnacademy.springaiflyschedulepractice.controller;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.OrchestrationResult;
 import com.nhnacademy.springaiflyschedulepractice.service.NLOrchestrationService;
-import com.nhnacademy.springaiflyschedulepractice.service.PureA2aSearchService;
+import com.nhnacademy.springaiflyschedulepractice.service.CoordinatorSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NlSearchController {
     private final NLOrchestrationService orchestrationService;
-    private final PureA2aSearchService pureA2aSearchService;
+    private final CoordinatorSearchService pureA2aSearchService;
 
     @PostMapping("/search")
     public OrchestrationResult search(@RequestBody Map<String, String> request) {

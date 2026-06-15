@@ -1,5 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
+import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,13 @@ class AirportCodeAgentTest {
     @Test
     @DisplayName("알 수 없는 공항 예외")
     void getCodeNotExist() {
-        assertThrows(IllegalArgumentException.class, () -> airportCodeAgent.getAirportCode("평양"));
+        assertThrows(FlightSearchException.class, () -> airportCodeAgent.getAirportCode("평양"));
+    }
+
+    @Test
+    @DisplayName("null 또는 빈 문자열 입력 시 예외 발생")
+    void getCodeNullOrEmpty() {
+        assertThrows(FlightSearchException.class, () -> airportCodeAgent.getAirportCode(null));
+        assertThrows(FlightSearchException.class, () -> airportCodeAgent.getAirportCode("    "));
     }
 }
