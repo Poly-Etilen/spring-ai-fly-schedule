@@ -40,7 +40,7 @@ async function sendMessage() {
     try {
         const [archType, modelType] = apiType.split('-');
 
-        if (archType === 'orch' || archType === 'a2a') {
+        if (archType === 'orch' || archType === 'coordinator') {
             response = await fetch('/api/nl-search/search', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -60,9 +60,9 @@ async function sendMessage() {
 
         if (!response.ok) throw new Error(`서버 에러가 발생했습니다. (상태 코드: ${response.status})`);
 
-        if (archType === 'orch' || archType === 'a2a') {
+        if (archType === 'orch' || archType === 'coordinator') {
             const data = await response.json();
-            const title = archType === 'orch' ? '[Orchestrator 중앙 조율 완료]' : '[A2A 에이전트 협업 완료]';
+            const title = archType === 'orch' ? '[Orchestrator 중앙 조율 완료]' : '[Coordinator 협업 완료]';
             let resultHtml = `<strong>${title}</strong><br><pre>${JSON.stringify(data, null, 2)}</pre>`;
             appendMessage('bot', resultHtml, true);
         } else {

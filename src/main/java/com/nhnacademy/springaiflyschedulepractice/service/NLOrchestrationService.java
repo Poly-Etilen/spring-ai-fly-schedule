@@ -60,11 +60,8 @@ public class NLOrchestrationService {
         log.info("공항: {} → {}, {} → {}", departure, depCode, arrival, arrCode);
 
         log.info("단계 5: 항공편 검색");
-        Map<String, List<FlightInfoResponse>> flightsMap =
-                flightSearchAgent.searchAndGroupByAirline(depCode, arrCode, parsedDate);
-        List<FlightInfoResponse> flights = flightsMap.values().stream()
-                .flatMap(List::stream)
-                .toList();
+        List<FlightInfoResponse> flights =
+                flightSearchAgent.searchFlights(depCode, arrCode, parsedDate);
         log.info("검색된 항공편: {}편", flights.size());
 
         if (normalizerAgent.hasText(params.afterTime())) {

@@ -17,7 +17,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NlSearchController {
     private final NLOrchestrationService orchestrationService;
-    private final CoordinatorSearchService pureA2aSearchService;
+    private final CoordinatorSearchService coordinatorSearchService;
 
     @PostMapping("/search")
     public OrchestrationResult search(@RequestBody Map<String, String> request) {
@@ -28,8 +28,8 @@ public class NlSearchController {
         if (message == null || message.isBlank()) {
             return OrchestrationResult.error("메세지를 입력해주세요");
         }
-        if (type.equals("a2a")) {
-            return pureA2aSearchService.executeA2aSearch(message, model);
+        if (type.equals("coordinator")) {
+            return coordinatorSearchService.executeCoordinatorSearch(message, model);
         } else {
             return orchestrationService.orchestrateFlightSearch(message, model);
         }
