@@ -1,10 +1,10 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.*;
+import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightDetail;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
-import com.nhnacademy.springaiflyschedulepractice.dto.OrchestrationResult;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class NLOrchestrationService {
     private final GroupingAgent groupingAgent;
 
 
-    public OrchestrationResult orchestrateFlightSearch(String message, String model) {
+    public AiFlightSearchResult orchestrateFlightSearch(String message, String model) {
         log.info("자연어 항공편 검색 오케스트레이션 시작");
         log.info("메시지: {}", message);
 
@@ -44,7 +44,7 @@ public class NLOrchestrationService {
 
         log.info("단계 2: 파라미터 검증");
         if (!normalizerAgent.hasText(params.departure()) || !normalizerAgent.hasText(params.arrival())) {
-            return OrchestrationResult.error("출발 공항과 도착 공항을 명확히 입력해주세요.");
+            return AiFlightSearchResult.error("출발 공항과 도착 공항을 명확히 입력해주세요.");
         }
 
         log.info("단계 3: 날짜 처리");
@@ -105,7 +105,7 @@ public class NLOrchestrationService {
         log.info("오케스트레이션 완료");
 
 
-        return OrchestrationResult.success(params, resultData);
+        return AiFlightSearchResult.success(params, resultData);
     }
 
     private FlightDetail convertFlightToDetail(FlightInfoResponse flight) {
