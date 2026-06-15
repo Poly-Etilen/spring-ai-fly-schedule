@@ -1,9 +1,9 @@
 package com.nhnacademy.springaiflyschedulepractice.controller;
 
 
-import com.nhnacademy.springaiflyschedulepractice.dto.OrchestrationResult;
+import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
+import com.nhnacademy.springaiflyschedulepractice.service.CoordinatorSearchService;
 import com.nhnacademy.springaiflyschedulepractice.service.NLOrchestrationService;
-import com.nhnacademy.springaiflyschedulepractice.service.PureA2aSearchService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -17,19 +17,19 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NlSearchController {
     private final NLOrchestrationService orchestrationService;
-    private final PureA2aSearchService pureA2aSearchService;
+    private final CoordinatorSearchService coordinatorSearchService;
 
     @PostMapping("/search")
-    public OrchestrationResult search(@RequestBody Map<String, String> request) {
+    public AiFlightSearchResult search(@RequestBody Map<String, String> request) {
         String message = request.get("message");
         String model = request.getOrDefault("model", "gemini");
         String type = request.getOrDefault("type", "orchestrator");
 
         if (message == null || message.isBlank()) {
-            return OrchestrationResult.error("메세지를 입력해주세요");
+            return AiFlightSearchResult.error("메세지를 입력해주세요");
         }
-        if (type.equals("a2a")) {
-            return pureA2aSearchService.executeA2aSearch(message, model);
+        if (type.equals("coordinator")) {
+            return coordinatorSearchService.executeCoordinatorSearch(message, model);
         } else {
             return orchestrationService.orchestrateFlightSearch(message, model);
         }

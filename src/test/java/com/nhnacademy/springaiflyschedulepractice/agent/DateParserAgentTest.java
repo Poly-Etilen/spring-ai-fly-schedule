@@ -1,5 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
+import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -30,6 +31,15 @@ class DateParserAgentTest {
     }
 
     @Test
+    @DisplayName("글피 파싱")
+    void parseThreeDaysLater() {
+        String result = dateParserAgent.parseDate("글피");
+        assertNotNull(result);
+        assertTrue(result.matches("\\d{8}"));
+        assertEquals(LocalDate.now().plusDays(3).format(DateTimeFormatter.ofPattern("yyyyMMdd")), result);
+    }
+
+    @Test
     @DisplayName("특정 날짜 파싱")
     void parseSpecificDate() {
         String result = dateParserAgent.parseDate("2026-11-11");
@@ -41,6 +51,6 @@ class DateParserAgentTest {
     @Test
     @DisplayName("잘못된 날짜 형식 예외")
     void parseWrongDate() {
-        assertThrows(IllegalArgumentException.class, () -> dateParserAgent.parseDate("2026/11/11"));
+        assertThrows(FlightSearchException.class, () -> dateParserAgent.parseDate("2026/11/11"));
     }
 }
