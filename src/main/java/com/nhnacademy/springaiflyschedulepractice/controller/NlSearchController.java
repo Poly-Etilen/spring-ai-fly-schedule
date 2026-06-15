@@ -5,6 +5,7 @@ import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
 import com.nhnacademy.springaiflyschedulepractice.service.CoordinatorSearchService;
 import com.nhnacademy.springaiflyschedulepractice.service.NLOrchestrationService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,12 +19,18 @@ import java.util.Map;
 public class NlSearchController {
     private final NLOrchestrationService orchestrationService;
     private final CoordinatorSearchService coordinatorSearchService;
+    private final FlightValidator flightValidator;
 
     @PostMapping("/search")
     public AiFlightSearchResult search(@RequestBody Map<String, String> request) {
         String message = request.get("message");
         String model = request.getOrDefault("model", "gemini");
         String type = request.getOrDefault("type", "orchestrator");
+
+//        flightValidator.validate(message, errors);
+//        if (errors.hasErrors()) {
+//            throw new ValidationException(message, errors);
+//        }
 
         if (message == null || message.isBlank()) {
             return AiFlightSearchResult.error("메세지를 입력해주세요");
