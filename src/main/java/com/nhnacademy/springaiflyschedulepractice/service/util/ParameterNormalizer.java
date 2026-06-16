@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.service;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import lombok.extern.slf4j.Slf4j;
@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 
 @Slf4j
 @Service
-public class ParameterNormalizerAgent {
+public class ParameterNormalizer {
     public FlightSearchParam normalize(String message, FlightSearchParam params) {
         Map<String, Object> map = new HashMap<>();
         map.put("departure", params.departure());

@@ -1,7 +1,7 @@
 package com.nhnacademy.springaiflyschedulepractice.controller;
 
-import com.nhnacademy.springaiflyschedulepractice.agent.AirportCodeAgent;
-import com.nhnacademy.springaiflyschedulepractice.agent.DateParserAgent;
+import com.nhnacademy.springaiflyschedulepractice.service.util.AirportCodeConverter;
+import com.nhnacademy.springaiflyschedulepractice.service.util.DateParser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,13 +12,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/agent")
 @RequiredArgsConstructor
 public class AgentTestController {
-    private final DateParserAgent dateParserAgent;
-    private final AirportCodeAgent airportCodeAgent;
+    private final DateParser dateParser;
+    private final AirportCodeConverter airportCodeConverter;
 
     @GetMapping("/date-parse")
     public String testDateParser(@RequestParam String input) {
         try {
-            String result = dateParserAgent.parseDate(input);
+            String result = dateParser.parseDate(input);
             return result;
         } catch (Exception e) {
             return "파싱 실패: " + e.getMessage();
@@ -28,7 +28,7 @@ public class AgentTestController {
     @GetMapping("/airport-code")
     public String testAirportCode(@RequestParam String input) {
         try {
-            String result = airportCodeAgent.getAirportCode(input);
+            String result = airportCodeConverter.getAirportCode(input);
             return "공항 코드 변환: " + input + " -> " + result;
         } catch (Exception e) {
             return "변환 실패: " + e.getMessage();
@@ -42,9 +42,9 @@ public class AgentTestController {
             @RequestParam String date
     ) {
         try {
-            String depCode = airportCodeAgent.getAirportCode(departure);
-            String arrCode = airportCodeAgent.getAirportCode(arrival);
-            String formattedDate = dateParserAgent.parseDate(date);
+            String depCode = airportCodeConverter.getAirportCode(departure);
+            String arrCode = airportCodeConverter.getAirportCode(arrival);
+            String formattedDate = dateParser.parseDate(date);
 
             return String.format(
                     "에이전트 체이닝 결과:\n" +

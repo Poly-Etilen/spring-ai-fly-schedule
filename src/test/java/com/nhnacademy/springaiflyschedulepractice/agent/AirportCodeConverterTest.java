@@ -1,18 +1,19 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
 import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
+import com.nhnacademy.springaiflyschedulepractice.service.util.AirportCodeConverter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class AirportCodeAgentTest {
-    private final AirportCodeAgent airportCodeAgent = new AirportCodeAgent();
+class AirportCodeConverterTest {
+    private final AirportCodeConverter airportCodeConverter = new AirportCodeConverter();
 
     @Test
     @DisplayName("광주 공항 코드 변환")
     void getGwangjuCode() {
-        String code = airportCodeAgent.getAirportCode("광주");
+        String code = airportCodeConverter.getAirportCode("광주");
         assertNotNull(code);
         assertEquals("NAARKJJ", code);
     }
@@ -20,7 +21,7 @@ class AirportCodeAgentTest {
     @Test
     @DisplayName("제주 공항 코드 변환")
     void getJejuCode() {
-        String code = airportCodeAgent.getAirportCode("제주");
+        String code = airportCodeConverter.getAirportCode("제주");
         assertNotNull(code);
         assertEquals("NAARKPC", code);
     }
@@ -28,7 +29,7 @@ class AirportCodeAgentTest {
     @Test
     @DisplayName("이미 공항 코드인 경우")
     void getCodeAlreadyCoded() {
-        String code = airportCodeAgent.getAirportCode("NAARKJJ");
+        String code = airportCodeConverter.getAirportCode("NAARKJJ");
         assertNotNull(code);
         assertEquals("NAARKJJ", code);
     }
@@ -36,13 +37,13 @@ class AirportCodeAgentTest {
     @Test
     @DisplayName("알 수 없는 공항 예외")
     void getCodeNotExist() {
-        assertThrows(FlightSearchException.class, () -> airportCodeAgent.getAirportCode("평양"));
+        assertThrows(FlightSearchException.class, () -> airportCodeConverter.getAirportCode("평양"));
     }
 
     @Test
     @DisplayName("null 또는 빈 문자열 입력 시 예외 발생")
     void getCodeNullOrEmpty() {
-        assertThrows(FlightSearchException.class, () -> airportCodeAgent.getAirportCode(null));
-        assertThrows(FlightSearchException.class, () -> airportCodeAgent.getAirportCode("    "));
+        assertThrows(FlightSearchException.class, () -> airportCodeConverter.getAirportCode(null));
+        assertThrows(FlightSearchException.class, () -> airportCodeConverter.getAirportCode("    "));
     }
 }

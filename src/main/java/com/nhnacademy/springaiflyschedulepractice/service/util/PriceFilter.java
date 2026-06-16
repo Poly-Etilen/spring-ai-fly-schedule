@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import org.springframework.stereotype.Service;
@@ -8,7 +8,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class PriceFilterAgent {
+public class PriceFilter {
 
     public List<FlightInfoResponse> filterByPriceRange(
             List<FlightInfoResponse> flights,
