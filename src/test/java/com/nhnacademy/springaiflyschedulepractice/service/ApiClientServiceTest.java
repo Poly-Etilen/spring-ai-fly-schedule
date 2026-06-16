@@ -1,7 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
 import com.nhnacademy.springaiflyschedulepractice.config.DataGoKrApiProperties;
-import com.nhnacademy.springaiflyschedulepractice.dto.ApiResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.ApiResponseWrapper;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineInfoResponse;
@@ -151,13 +150,6 @@ class ApiClientServiceTest {
         when(responseSpec.body(AirlineResponseWrapper.class)).thenReturn(expected);
         List<AirlineInfoResponse> actual = apiClientService.getAirlineList();
         assertEquals(expected.getResponse().getBody().getItems().getItem(), actual);
-    }
-
-
-    @Test
-    @DisplayName("캐싱 테스트")
-    void ExistsCacheTest(){
-
     }
 
 
