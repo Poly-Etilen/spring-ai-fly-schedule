@@ -41,28 +41,6 @@ public class FlightSearchTool implements AiTool{
             @ToolParam(description = "이전 시간 필터링 (예: 1800, 없으면 null)", required = false) String beforeTime,
             @ToolParam(description = "최소 가격 (예: 30000, 없으면 null)", required = false) Integer minPrice,
             @ToolParam(description = "최대 가격 (예: 80000, 없으면 null)", required = false) Integer maxPrice) {
-//        String formattedDate = parseDate(date);
-//        String depAirportId = getAirportCode(departure);
-//        String arrAirportId = getAirportCode(arrival);
-//        List<FlightInfoResponse> allFlights = apiClientService.getFlightSchedule(depAirportId, arrAirportId, formattedDate);
-//
-//        if (afterTime != null) {
-//            allFlights = timeFilterAgent.filterAfterTime(allFlights, timeFilterAgent.parseTime(afterTime));
-//        }
-//
-//        Map<String, List<FlightInfoResponse>> groupedFlight = allFlights.stream().collect(Collectors.groupingBy(FlightInfoResponse::getAirlineName));
-//        Map<String, List<FlightInfoResponse>> limitedFlight = new HashMap<>();
-//
-//        groupedFlight.forEach((airline, flights) -> {
-//            if (flights.size() > 3) {
-//                limitedFlight.put(airline, flights.subList(0, 3));
-//            } else {
-//                limitedFlight.put(airline, flights);
-//            }
-//        });
-//
-////        log.info("Tool 응답: {}개 항공사, {}편", limitedFlight.size(), limitedFlight.values().stream().mapToInt(List::size).sum());
-//        return limitedFlight;
         log.info("[AI Tool 호출됨] 파라미터 - 출발:{}, 도착:{}, 날짜:{}, 이후:{}, 이전:{}, 최소가:{}, 최대가:{}",
                 departure, arrival, date, afterTime, beforeTime, minPrice, maxPrice);
 
