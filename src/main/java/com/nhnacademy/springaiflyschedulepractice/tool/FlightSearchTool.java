@@ -1,6 +1,5 @@
 package com.nhnacademy.springaiflyschedulepractice.tool;
 
-import com.nhnacademy.springaiflyschedulepractice.agent.*;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.service.agent.FlightSearchAgent;
 import com.nhnacademy.springaiflyschedulepractice.service.util.*;
@@ -82,36 +81,6 @@ public class FlightSearchTool implements AiTool{
 
         log.info("[AI Tool 처리 완료] 조건에 맞는 데이터 필터링 후 반환");
         return limitedFlight;
-    }
-
-    private String getAirportCode(String airportName) {
-        return switch (airportName) {
-            case "김포" -> "NAARKSS";
-            case "인천" -> "NAARKSI";
-            case "김해" -> "NAARKPK";
-            case "울산" -> "NAARKPU";
-            case "무안" -> "NAARKJB";
-            case "광주" -> "NAARKJJ";
-            case "여수" -> "NAARKJY";
-            case "제주" -> "NAARKPC";
-            case "대구" -> "NAARKTN";
-            case "포항" -> "NAARKTH";
-            case "양양" -> "NAARKNY";
-            case "청주" -> "NAARKTU";
-            default -> "NAARKJJ";
-        };
-    }
-
-    private String parseDate(String date) {
-        if (date.equals("내일")) {
-            return LocalDate.now().plusDays(1).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        } else if (date.equals("모레")) {
-            return LocalDate.now().plusDays(2).format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        } else if (date.matches("\\d{4}-\\d{2}-\\d{2}")) {
-            return date.replace("-", "");
-        } else {
-            return LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        }
     }
 
 }
