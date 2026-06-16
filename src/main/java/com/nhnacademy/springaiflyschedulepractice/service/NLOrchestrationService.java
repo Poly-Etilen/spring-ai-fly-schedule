@@ -1,6 +1,5 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
-import com.nhnacademy.springaiflyschedulepractice.agent.*;
 import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;

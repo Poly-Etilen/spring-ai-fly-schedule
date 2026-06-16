@@ -2,7 +2,6 @@ package com.nhnacademy.springaiflyschedulepractice.tool;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.*;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
-import com.nhnacademy.springaiflyschedulepractice.service.ApiClientService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
@@ -15,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
