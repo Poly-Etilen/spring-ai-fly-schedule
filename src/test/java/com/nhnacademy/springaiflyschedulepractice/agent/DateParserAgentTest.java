@@ -1,7 +1,7 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
-import com.nhnacademy.springaiflyschedulepractice.service.util.DateParser;
 import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
+import com.nhnacademy.springaiflyschedulepractice.service.util.DateParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

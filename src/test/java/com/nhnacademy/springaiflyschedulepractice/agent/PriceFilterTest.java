@@ -1,7 +1,7 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
-import com.nhnacademy.springaiflyschedulepractice.service.util.PriceFilter;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
+import com.nhnacademy.springaiflyschedulepractice.service.util.PriceFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

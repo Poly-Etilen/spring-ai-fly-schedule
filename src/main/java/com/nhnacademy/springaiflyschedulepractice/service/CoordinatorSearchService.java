@@ -1,9 +1,9 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
-import com.nhnacademy.springaiflyschedulepractice.service.util.ParameterNormalizer;
 import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
+import com.nhnacademy.springaiflyschedulepractice.service.util.ParameterNormalizer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
