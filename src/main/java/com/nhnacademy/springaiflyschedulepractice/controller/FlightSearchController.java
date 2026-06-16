@@ -14,8 +14,15 @@ public class FlightSearchController {
     private final FlightSearchTool flightSearchTool;
 
     @GetMapping("/search")
-    public String searchFlights(@RequestParam String departure, @RequestParam String arrival, @RequestParam String date) {
-        var result = flightSearchTool.searchFlightsByAirline(departure, arrival, date);
+    public String searchFlights(@RequestParam String departure,
+                                @RequestParam String arrival,
+                                @RequestParam String date,
+                                @RequestParam(required = false) String afterTime,
+                                @RequestParam(required = false) String beforeTime,
+                                @RequestParam(required = false) Integer minPrice,
+                                @RequestParam(required = false) Integer maxPrice) {
+        var result = flightSearchTool.searchFlightsByAirline(
+                departure, arrival, date, afterTime, beforeTime, minPrice, maxPrice);
 
         StringBuilder builder = new StringBuilder();
         builder.append("항공편 검색 결과: \n\n");

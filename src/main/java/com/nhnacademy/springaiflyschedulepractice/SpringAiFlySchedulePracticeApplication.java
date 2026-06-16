@@ -6,6 +6,8 @@ import org.springframework.cache.annotation.EnableCaching;
 
 @EnableCaching
 @SpringBootApplication
+//@EnableConfigurationProperties
+//@ConfigurationPropertiesScan
 public class SpringAiFlySchedulePracticeApplication {
 
     public static void main(String[] args) {
