@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Objects;
+
 @RestController
 @RequestMapping("/api/nl-search")
 @RequiredArgsConstructor
@@ -24,7 +26,7 @@ public class NlSearchController {
     public AiFlightSearchResult search(@RequestBody NlSearchRequest request, BindingResult bindingResult) {
         flightValidator.validate(request, bindingResult);
         if (bindingResult.hasErrors()) {
-            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            String errorMessage = Objects.requireNonNull(bindingResult.getFieldError()).getDefaultMessage();
             return AiFlightSearchResult.error(errorMessage);
         }
 
@@ -32,10 +34,7 @@ public class NlSearchController {
         String model = request.getModel();
         String type = request.getType();
 
-        if (message == null || message.isBlank()) {
-            return AiFlightSearchResult.error("메세지를 입력해주세요");
-        }
-        if (type.equals("coordinator")) {
+        if (type.equalsIgnoreCase("coordinator")) {
             return coordinatorSearchService.executeCoordinatorSearch(message, model);
         } else {
             return orchestrationService.orchestrateFlightSearch(message, model);
