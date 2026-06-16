@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.exception.ErrorCode;
@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class TimeFilterAgent {
+public class TimeFilter {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HHmm");
 
     public LocalTime parseTime(String timeInput){

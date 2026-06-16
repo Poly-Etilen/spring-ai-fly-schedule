@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.exception.ErrorCode;
 import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
@@ -10,7 +10,7 @@ import java.util.Map;
 
 @Slf4j
 @Service
-public class AirportCodeAgent {
+public class AirportCodeConverter {
     private static final Map<String, String> AIRPORT_CODE_MAP = new HashMap<>();
 
     static {

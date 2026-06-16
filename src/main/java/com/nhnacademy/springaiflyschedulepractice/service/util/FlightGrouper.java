@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class GroupingAgent {
+public class FlightGrouper {
     public Map<String, List<FlightInfoResponse>> groupByAirline(List<FlightInfoResponse> flights) {
         log.info("GroupingAgent: 항공사별 그룹핑 시작 ({}편)", flights.size());
         Map<String, List<FlightInfoResponse>> grouped = flights.stream()

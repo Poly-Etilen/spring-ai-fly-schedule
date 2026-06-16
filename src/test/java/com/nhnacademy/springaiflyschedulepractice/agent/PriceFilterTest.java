@@ -1,5 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.agent;
 
+import com.nhnacademy.springaiflyschedulepractice.service.util.PriceFilter;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -9,8 +10,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-class PriceFilterAgentTest {
-    private final PriceFilterAgent priceFilterAgent = new PriceFilterAgent();
+class PriceFilterTest {
+    private final PriceFilter priceFilter = new PriceFilter();
 
     @Test
     @DisplayName("가격 필터링 - 최소 및 최대 가격 조건이 모두 있을 때")
@@ -20,7 +21,7 @@ class PriceFilterAgentTest {
                 FlightInfoResponse.builder().flightId("FL2").economyCharge("50,000").build(),
                 FlightInfoResponse.builder().flightId("FL3").economyCharge("70000원").build()
         );
-        List<FlightInfoResponse> result = priceFilterAgent.filterByPriceRange(flights, 40000, 60000);
+        List<FlightInfoResponse> result = priceFilter.filterByPriceRange(flights, 40000, 60000);
 
         assertEquals(1, result.size());
         assertEquals("FL2", result.getFirst().getFlightId());
@@ -34,7 +35,7 @@ class PriceFilterAgentTest {
                 FlightInfoResponse.builder().flightId("FL2").economyCharge("가격미상").build(),
                 FlightInfoResponse.builder().flightId("FL3").economyCharge("").build()
         );
-        List<FlightInfoResponse> result = priceFilterAgent.filterByPriceRange(flights, 0, 100_000);
+        List<FlightInfoResponse> result = priceFilter.filterByPriceRange(flights, 0, 100_000);
         assertTrue(result.isEmpty());
     }
 }

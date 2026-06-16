@@ -1,5 +1,6 @@
 package com.nhnacademy.springaiflyschedulepractice.service;
 
+import com.nhnacademy.springaiflyschedulepractice.service.util.ParameterNormalizer;
 import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightSearchParam;
 import com.nhnacademy.springaiflyschedulepractice.dto.airline.AirlineGroup;
@@ -14,15 +15,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CoordinatorSearchService {
     private final LlmAnalysisService llmAnalysisService;
-    private final ParameterNormalizerAgent parameterNormalizerAgent;
+    private final ParameterNormalizer parameterNormalizer;
     private final FlightCoordinator flightCoordinator;
 
     public AiFlightSearchResult executeCoordinatorSearch(String message, String model) {
         log.info("Coordinator 방식 검색 시작");
         FlightSearchParam params = llmAnalysisService.extractFlightSearchParam(message, model);
-        params = parameterNormalizerAgent.normalize(message, params);
+        params = parameterNormalizer.normalize(message, params);
 
-        if (!parameterNormalizerAgent.hasText(params.departure()) ||  !parameterNormalizerAgent.hasText(params.arrival())) {
+        if (!parameterNormalizer.hasText(params.departure()) ||  !parameterNormalizer.hasText(params.arrival())) {
             return AiFlightSearchResult.error("출발 공항과 도착 공항을 명확히 입력해주세요.");
         }
 

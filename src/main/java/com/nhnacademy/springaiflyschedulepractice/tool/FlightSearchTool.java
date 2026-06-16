@@ -2,6 +2,8 @@ package com.nhnacademy.springaiflyschedulepractice.tool;
 
 import com.nhnacademy.springaiflyschedulepractice.agent.*;
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
+import com.nhnacademy.springaiflyschedulepractice.service.agent.FlightSearchAgent;
+import com.nhnacademy.springaiflyschedulepractice.service.util.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.tool.annotation.Tool;
@@ -19,12 +21,12 @@ import java.util.Map;
 @Service
 @RequiredArgsConstructor
 public class FlightSearchTool implements AiTool{
-    private final DateParserAgent dateParserAgent;
-    private final AirportCodeAgent airportCodeAgent;
+    private final DateParser dateParser;
+    private final AirportCodeConverter airportCodeConverter;
     private final FlightSearchAgent flightSearchAgent;
-    private final TimeFilterAgent timeFilterAgent;
-    private final PriceFilterAgent priceFilterAgent;
-    private final GroupingAgent groupingAgent;
+    private final TimeFilter timeFilter;
+    private final PriceFilter priceFilter;
+    private final FlightGrouper flightGrouper;
 
     @Tool(
             description = "항공편을 검색하고 조건(시간, 가격)에 맞게 필터링하여 항공사별로 반환합니다. " +
@@ -43,30 +45,30 @@ public class FlightSearchTool implements AiTool{
                 departure, arrival, date, afterTime, beforeTime, minPrice, maxPrice);
 
         // 1. 공항 코드 및 날짜 파싱 (기존 private 메서드 대신 Agent 활용)
-        String parsedDate = dateParserAgent.parseDate(date != null ? date : "내일");
-        String depCode = airportCodeAgent.getAirportCode(departure);
-        String arrCode = airportCodeAgent.getAirportCode(arrival);
+        String parsedDate = dateParser.parseDate(date != null ? date : "내일");
+        String depCode = airportCodeConverter.getAirportCode(departure);
+        String arrCode = airportCodeConverter.getAirportCode(arrival);
 
         // 2. 항공편 기본 검색 (API 호출)
         List<FlightInfoResponse> flights = flightSearchAgent.searchFlights(depCode, arrCode, parsedDate);
 
         // 3. 시간 필터링 적용
         if (afterTime != null && !afterTime.isBlank()) {
-            LocalTime time = timeFilterAgent.parseTime(afterTime);
-            flights = timeFilterAgent.filterAfterTime(flights, time);
+            LocalTime time = timeFilter.parseTime(afterTime);
+            flights = timeFilter.filterAfterTime(flights, time);
         }
         if (beforeTime != null && !beforeTime.isBlank()) {
-            LocalTime time = timeFilterAgent.parseTime(beforeTime);
-            flights = timeFilterAgent.filterBeforeTime(flights, time);
+            LocalTime time = timeFilter.parseTime(beforeTime);
+            flights = timeFilter.filterBeforeTime(flights, time);
         }
 
         // 4. 가격 필터링 적용
         if (minPrice != null || maxPrice != null) {
-            flights = priceFilterAgent.filterByPriceRange(flights, minPrice, maxPrice);
+            flights = priceFilter.filterByPriceRange(flights, minPrice, maxPrice);
         }
 
         // 5. 항공사별 그룹핑
-        Map<String, List<FlightInfoResponse>> groupedFlight = groupingAgent.groupByAirline(flights);
+        Map<String, List<FlightInfoResponse>> groupedFlight = flightGrouper.groupByAirline(flights);
 
         // 6. 결과 제한 (항공사별 최대 3편)
         Map<String, List<FlightInfoResponse>> limitedFlight = new HashMap<>();

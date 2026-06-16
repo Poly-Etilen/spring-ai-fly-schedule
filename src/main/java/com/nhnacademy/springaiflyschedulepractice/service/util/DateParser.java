@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.exception.ErrorCode;
 import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
@@ -11,7 +11,7 @@ import java.time.format.DateTimeParseException;
 
 @Slf4j
 @Service
-public class DateParserAgent {
+public class DateParser {
     private static final DateTimeFormatter API_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd");
     private static final DateTimeFormatter INPUT_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 

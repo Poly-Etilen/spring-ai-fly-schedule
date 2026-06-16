@@ -1,4 +1,4 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.agent;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
 import com.nhnacademy.springaiflyschedulepractice.service.ApiClientService;
