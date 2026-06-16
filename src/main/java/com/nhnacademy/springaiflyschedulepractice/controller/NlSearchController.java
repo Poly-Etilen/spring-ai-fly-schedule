@@ -2,16 +2,15 @@ package com.nhnacademy.springaiflyschedulepractice.controller;
 
 
 import com.nhnacademy.springaiflyschedulepractice.dto.AiFlightSearchResult;
+import com.nhnacademy.springaiflyschedulepractice.dto.NlSearchRequest;
 import com.nhnacademy.springaiflyschedulepractice.service.CoordinatorSearchService;
 import com.nhnacademy.springaiflyschedulepractice.service.NLOrchestrationService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.Errors;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/nl-search")
@@ -22,15 +21,16 @@ public class NlSearchController {
     private final FlightValidator flightValidator;
 
     @PostMapping("/search")
-    public AiFlightSearchResult search(@RequestBody Map<String, String> request) {
-        String message = request.get("message");
-        String model = request.getOrDefault("model", "gemini");
-        String type = request.getOrDefault("type", "orchestrator");
+    public AiFlightSearchResult search(@RequestBody NlSearchRequest request, BindingResult bindingResult) {
+        flightValidator.validate(request, bindingResult);
+        if (bindingResult.hasErrors()) {
+            String errorMessage = bindingResult.getFieldError().getDefaultMessage();
+            return AiFlightSearchResult.error(errorMessage);
+        }
 
-//        flightValidator.validate(message, errors);
-//        if (errors.hasErrors()) {
-//            throw new ValidationException(message, errors);
-//        }
+        String message = request.getMessage();
+        String model = request.getModel();
+        String type = request.getType();
 
         if (message == null || message.isBlank()) {
             return AiFlightSearchResult.error("메세지를 입력해주세요");
