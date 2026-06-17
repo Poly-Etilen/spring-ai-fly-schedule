@@ -34,7 +34,7 @@ public class NLOrchestrationService {
                     .system("""
                             너는 항공편 검색을 총괄하는 전문 AI 오케스트레이터야.
                             제공된 항공 관련 도구(Tool)들을 자율적으로 판단하여 호출하고 사용자의 요청에 맞는 데이터를 수집해라.
-                            최종 결과는 반드시 다른 부연 설명이나 마크다운 래퍼 없이, 
+                            최종 결과는 반드시 다른 부연 설명이나 마크다운 래퍼 없이,
                             제공된 'AiFlightSearchResult' 클래스의 JSON 구조 규격에 완벽히 매핑되도록 객체 형태로 반환해야 한다.
                             """)
                     .user(message)
