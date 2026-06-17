@@ -54,4 +54,17 @@ class DateParserAgentTest {
     void parseWrongDate() {
         assertThrows(FlightSearchException.class, () -> dateParser.parseDate("2026/11/11"));
     }
+
+    @Test
+    @DisplayName("인자값 검증")
+    void validArgTest(){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+        //null이나 empty일 경우 오늘 날짜로 반환
+        assertAll(
+                () -> assertEquals(LocalDate.now().format(formatter), dateParser.parseDate(null)),
+                () -> assertEquals(LocalDate.now().format(formatter), dateParser.parseDate(""))
+        );
+
+
+    }
 }

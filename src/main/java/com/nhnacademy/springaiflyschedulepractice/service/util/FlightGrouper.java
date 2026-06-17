@@ -28,7 +28,7 @@ public class FlightGrouper {
         log.info("GroupingAgent: 시간대별 그룹핑 시작");
         return flights.stream()
                 .collect(Collectors.groupingBy(flight -> {
-                    int hour = Integer.parseInt(flight.getDepartureTime().substring(0, 2));
+                    int hour = Integer.parseInt(flight.getDepartureTime().substring(8,10)); //추출 인덱스 수정
 
                     if (hour < 12) return "오전";
                     else if (hour < 18) return "오후";
