@@ -1,12 +1,9 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.dto.FlightInfoResponse;
-import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
-import com.nhnacademy.springaiflyschedulepractice.service.util.TimeFilter;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,7 +1,6 @@
-package com.nhnacademy.springaiflyschedulepractice.agent;
+package com.nhnacademy.springaiflyschedulepractice.service.util;
 
 import com.nhnacademy.springaiflyschedulepractice.exception.FlightSearchException;
-import com.nhnacademy.springaiflyschedulepractice.service.util.DateParser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -10,7 +9,7 @@ import java.time.format.DateTimeFormatter;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class DateParserAgentTest {
+class DateParserTest {
     private final DateParser dateParser = new DateParser();
 
     @Test
